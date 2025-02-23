@@ -65,6 +65,12 @@ export const postOperations: INodeProperties[] = [
 				action: 'Get many posts',
 			},
 			{
+				name: 'Upload Image',
+				value: 'uploadImage',
+				description: 'Upload an image to Ghost',
+				action: 'Upload an image',
+			},
+			{
 				name: 'Update',
 				value: 'update',
 				description: 'Update a post',
@@ -902,6 +908,72 @@ export const postFields: INodeProperties[] = [
 				name: 'twitter_title',
 				type: 'string',
 				default: '',
+			},
+		],
+	},
+
+	/* -------------------------------------------------------------------------- */
+	/*                                post:uploadImage                              */
+	/* -------------------------------------------------------------------------- */
+	{
+		displayName: 'Binary Property',
+		name: 'binaryPropertyName',
+		type: 'string',
+		default: 'data',
+		required: true,
+		displayOptions: {
+			show: {
+				operation: ['uploadImage'],
+				resource: ['post'],
+				source: ['adminApi'],
+			},
+		},
+		description: 'Name of the binary property containing the image file to upload',
+	},
+	{
+		displayName: 'Additional Fields',
+		name: 'additionalFields',
+		type: 'collection',
+		placeholder: 'Add Field',
+		default: {},
+		displayOptions: {
+			show: {
+				operation: ['uploadImage'],
+				resource: ['post'],
+				source: ['adminApi'],
+			},
+		},
+		options: [
+			{
+				displayName: 'Purpose',
+				name: 'purpose',
+				type: 'options',
+				default: 'image',
+				options: [
+					{
+						name: 'Image',
+						value: 'image',
+						description: 'General purpose image',
+					},
+					{
+						name: 'Profile Image',
+						value: 'profile_image',
+						description: 'Profile image (must be square)',
+					},
+					{
+						name: 'Icon',
+						value: 'icon',
+						description: 'Icon image (must be square)',
+					},
+				],
+				description: 'The intended use for the image',
+			},
+			{
+				displayName: 'Reference',
+				name: 'ref',
+				type: 'string',
+				default: '',
+				description: 'Optional reference or identifier for the image (e.g. original filename)',
 			},
 		],
 	},
