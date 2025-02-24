@@ -19,7 +19,7 @@
     "type": "git",
     "url": "git+https://github.com/VladoPortos/N8N-ghost-v2.git"
   },
-  "main": "index.js",
+  "main": "dist/nodes/GhostV2/Ghostv2.node.js",
   "scripts": {
     "build": "tsc && gulp build:icons && gulp build:translations",
     "dev": "tsc --watch",
@@ -49,8 +49,6 @@
     "eslint": "^8.56.0",
     "eslint-plugin-n8n-nodes-base": "^1.16.1",
     "gulp": "^4.0.2",
-    "n8n-core": "^0.125.0",
-    "n8n-workflow": "^0.107.0",
     "prettier": "^2.7.1",
     "typescript": "~4.8.4"
   },
@@ -59,5 +57,9 @@
     "@types/node": "^22.13.5",
     "jsonwebtoken": "^9.0.2",
     "moment-timezone": "^0.5.43"
+  },
+  "peerDependencies": {
+    "n8n-core": ">=0.125.0",
+    "n8n-workflow": ">=0.107.0"
   }
 }
