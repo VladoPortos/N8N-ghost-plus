@@ -388,3 +388,5 @@ export class GhostV2 implements INodeType {
 		return [this.helpers.returnJsonArray(returnData)];
 	}
 }
+
+export default GhostV2;
