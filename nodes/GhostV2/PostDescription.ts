@@ -73,6 +73,11 @@ export const postOperations: INodeProperties[] = [
 				value: 'update',
 				description: 'Update a post',
 			},
+			{
+				name: 'Upload Image',
+				value: 'uploadImage',
+				description: 'Upload an image',
+			},
 		],
 		default: 'get',
 	},
@@ -231,6 +236,27 @@ export const postFields: INodeProperties[] = [
 				type: 'string',
 				default: '',
 				description: 'The Code Injection allows you inject a small snippet into your Ghost site',
+			},
+			{
+				displayName: 'Feature Image',
+				name: 'feature_image',
+				type: 'string',
+				default: '',
+				description: 'URL of the feature image',
+			},
+			{
+				displayName: 'Feature Image Alt Text',
+				name: 'feature_image_alt',
+				type: 'string',
+				default: '',
+				description: 'Alternative text for feature image',
+			},
+			{
+				displayName: 'Feature Image Caption',
+				name: 'feature_image_caption',
+				type: 'string',
+				default: '',
+				description: 'Caption for the feature image',
 			},
 			{
 				displayName: 'Featured',
@@ -775,7 +801,7 @@ export const postFields: INodeProperties[] = [
 				default: [],
 			},
 			{
-				displayName: 'Cannonical URL',
+				displayName: 'Canonical URL',
 				name: 'canonical_url',
 				type: 'string',
 				default: '',
@@ -821,6 +847,27 @@ export const postFields: INodeProperties[] = [
 				},
 				default: '',
 				description: 'Mobiledoc is the raw JSON format that Ghost uses to store post contents. <a href="https://ghost.org/docs/concepts/posts/#document-storage">Info.</a>.',
+			},
+			{
+				displayName: 'Feature Image',
+				name: 'feature_image',
+				type: 'string',
+				default: '',
+				description: 'URL of the feature image',
+			},
+			{
+				displayName: 'Feature Image Alt Text',
+				name: 'feature_image_alt',
+				type: 'string',
+				default: '',
+				description: 'Alternative text for feature image',
+			},
+			{
+				displayName: 'Feature Image Caption',
+				name: 'feature_image_caption',
+				type: 'string',
+				default: '',
+				description: 'Caption for the feature image',
 			},
 			{
 				displayName: 'Featured',
@@ -925,6 +972,84 @@ export const postFields: INodeProperties[] = [
 				name: 'twitter_title',
 				type: 'string',
 				default: '',
+			},
+		],
+	},
+
+	/* -------------------------------------------------------------------------- */
+	/*                                post:uploadImage                              */
+	/* -------------------------------------------------------------------------- */
+	{
+		displayName: 'Binary Property',
+		name: 'binaryPropertyName',
+		type: 'string',
+		default: 'data',
+		required: true,
+		displayOptions: {
+			show: {
+				source: [
+					'adminApi',
+				],
+				resource: [
+					'post',
+				],
+				operation: [
+					'uploadImage',
+				],
+			},
+		},
+		description: 'Name of the binary property containing the image file to upload',
+	},
+	{
+		displayName: 'Additional Fields',
+		name: 'additionalFields',
+		type: 'collection',
+		placeholder: 'Add Field',
+		default: {},
+		displayOptions: {
+			show: {
+				source: [
+					'adminApi',
+				],
+				resource: [
+					'post',
+				],
+				operation: [
+					'uploadImage',
+				],
+			},
+		},
+		options: [
+			{
+				displayName: 'Purpose',
+				name: 'purpose',
+				type: 'options',
+				options: [
+					{
+						name: 'Image',
+						value: 'image',
+						description: 'General purpose image',
+					},
+					{
+						name: 'Profile Image',
+						value: 'profile_image',
+						description: 'Profile image (must be square)',
+					},
+					{
+						name: 'Icon',
+						value: 'icon',
+						description: 'Icon image (must be square)',
+					},
+				],
+				default: 'image',
+				description: 'Intended use for the image, changes the validations performed',
+			},
+			{
+				displayName: 'Reference',
+				name: 'ref',
+				type: 'string',
+				default: '',
+				description: 'Reference or identifier for the image (e.g. original filename and path)',
 			},
 		],
 	},

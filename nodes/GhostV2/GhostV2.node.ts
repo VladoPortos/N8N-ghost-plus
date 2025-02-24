@@ -10,6 +10,7 @@ import {
 	INodeType,
 	INodeTypeDescription,
 	NodeOperationError,
+	IBinaryData,
 } from 'n8n-workflow';
 
 import {
@@ -344,6 +345,36 @@ export class GhostV2 implements INodeType {
 
 							returnData.push.apply(returnData, responseData.posts);
 
+						}
+
+						if (operation === 'uploadImage') {
+							const binaryPropertyName = this.getNodeParameter('binaryPropertyName', i) as string;
+							const additionalFields = this.getNodeParameter('additionalFields', i) as IDataObject;
+							const formData: IDataObject = {};
+							
+							if (!items[i].binary) {
+								throw new NodeOperationError(this.getNode(), 'No binary data exists on item!');
+							}
+
+							const binaryData = items[i].binary![binaryPropertyName];
+							if (!binaryData) {
+								throw new NodeOperationError(this.getNode(), `No binary data property "${binaryPropertyName}" exists on item!`);
+							}
+
+							const binaryDataBuffer = await this.helpers.getBinaryDataBuffer(i, binaryPropertyName);
+							formData['file'] = {
+								value: binaryDataBuffer,
+								options: {
+									filename: binaryData.fileName,
+									contentType: binaryData.mimeType,
+								},
+							};
+							if (additionalFields.purpose) formData['purpose'] = additionalFields.purpose;
+							if (additionalFields.ref) formData['ref'] = additionalFields.ref;
+							responseData = await ghostApiRequest.call(this, 'POST', '/images/upload/', formData, {
+								headers: { 'Content-Type': 'multipart/form-data' },
+							});
+							returnData.push.apply(returnData, responseData.images);
 						}
 					}
 				}
