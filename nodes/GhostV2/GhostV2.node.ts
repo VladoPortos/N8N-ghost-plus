@@ -28,9 +28,9 @@ import moment from 'moment-timezone';
 export class Ghostv2 implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Ghost V2',
-		name: 'ghostv2',
+		name: 'ghostV2',
 		icon: 'file:ghostv2.svg',
-		group: ['input'],
+		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
 		description: 'Consume Ghost API',
