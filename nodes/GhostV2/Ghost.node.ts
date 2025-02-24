@@ -13,17 +13,17 @@ import { NodeConnectionType, NodeOperationError } from 'n8n-workflow';
 import { ghostApiRequest, ghostApiRequestAllItems, validateJSON } from './GenericFunctions';
 import { postFields, postOperations } from './PostDescription';
 
-export class Ghost implements INodeType {
+export class GhostV2 implements INodeType {
 	description: INodeTypeDescription = {
-		displayName: 'Ghost',
-		name: 'ghost',
+		displayName: 'Ghost V2',
+		name: 'ghostV2',
 		icon: 'file:ghost.svg',
 		group: ['input'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-		description: 'Consume Ghost API',
+		description: 'Consume Ghost API V2',
 		defaults: {
-			name: 'Ghost',
+			name: 'Ghost V2',
 		},
 		usableAsTool: true,
 		inputs: [NodeConnectionType.Main],

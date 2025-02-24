@@ -1,19 +1,21 @@
 {
-  "name": "n8n-nodes-<...>",
+  "name": "n8n-nodes-ghostv2",
   "version": "0.1.0",
-  "description": "",
+  "description": "Enhanced Ghost integration for n8n with additional features",
   "keywords": [
-    "n8n-community-node-package"
+    "n8n-community-node-package",
+    "ghost",
+    "blog",
+    "cms"
   ],
   "license": "MIT",
-  "homepage": "",
+  "homepage": "https://github.com/VladoPortos/N8N-ghost-v2",
   "author": {
-    "name": "",
-    "email": ""
+    "name": "VladoPortos"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/<...>/n8n-nodes-<...>.git"
+    "url": "https://github.com/VladoPortos/N8N-ghost-v2.git"
   },
   "engines": {
     "node": ">=18.10",
@@ -36,12 +38,11 @@
   "n8n": {
     "n8nNodesApiVersion": 1,
     "credentials": [
-      "dist/credentials/ExampleCredentialsApi.credentials.js",
-      "dist/credentials/HttpBinApi.credentials.js"
+      "dist/credentials/GhostV2AdminApi.credentials.js",
+      "dist/credentials/GhostV2ContentApi.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/ExampleNode/ExampleNode.node.js",
-      "dist/nodes/HttpBin/HttpBin.node.js"
+      "dist/nodes/GhostV2/GhostV2.node.js"
     ]
   },
   "devDependencies": {
