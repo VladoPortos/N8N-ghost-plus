@@ -25,17 +25,17 @@ import {
 
 import moment from 'moment-timezone';
 
-export class Ghost implements INodeType {
+export class GhostPlus implements INodeType {
 	description: INodeTypeDescription = {
-		displayName: 'Ghost',
-		name: 'ghost',
-		icon: 'file:ghost.svg',
-		group: ['input'],
+		displayName: 'Ghost Plus',
+		name: 'ghostPlus',
+		icon: 'file:ghostv2.svg',
+		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-		description: 'Consume Ghost API',
+		description: 'Consume Ghost API V2 with enhanced features',
 		defaults: {
-			name: 'Ghost',
+			name: 'Ghost Plus',
 		},
 		inputs: ['main'] as string[],
 		outputs: ['main'] as string[],

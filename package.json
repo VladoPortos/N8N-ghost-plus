@@ -1,19 +1,19 @@
 {
   "name": "@vladoportos/n8n-nodes-ghostv2",
   "version": "0.1.20",
-  "description": "n8n node for Ghost CMS",
+  "description": "Enhanced Ghost CMS node with V2 API support for n8n",
   "license": "MIT",
-  "homepage": "https://n8n.io",
+  "homepage": "https://github.com/VladoPortos/n8n-nodes-ghostv2",
   "keywords": [
     "n8n-community-node-package"
   ],
   "author": {
-    "name": "Jan Oberhauser",
-    "email": "jan@n8n.io"
+    "name": "VladoPortos",
+    "email": "vladoportos@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/n8n-io/n8n.git"
+    "url": "git+https://github.com/VladoPortos/n8n-nodes-ghostv2.git"
   },
   "files": [
     "dist"
@@ -25,7 +25,7 @@
       "dist/credentials/GhostContentApi.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/Ghost/Ghost.node.js"
+      "dist/nodes/GhostPlus/GhostPlus.node.js"
     ]
   },
   "devDependencies": {
