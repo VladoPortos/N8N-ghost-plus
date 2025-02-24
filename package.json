@@ -1,6 +1,6 @@
 {
   "name": "@vladoportos/n8n-nodes-ghostv2",
-  "version": "0.1.20",
+  "version": "0.1.21",
   "description": "Enhanced Ghost CMS node with V2 API support for n8n",
   "license": "MIT",
   "homepage": "https://github.com/VladoPortos/n8n-nodes-ghostv2",
