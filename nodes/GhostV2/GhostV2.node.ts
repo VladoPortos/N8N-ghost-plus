@@ -25,7 +25,7 @@ import {
 
 import moment from 'moment-timezone';
 
-class Ghostv2Node implements INodeType {
+export class Ghostv2 implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Ghost V2',
 		name: 'ghostv2',
@@ -388,5 +388,3 @@ class Ghostv2Node implements INodeType {
 		return [this.helpers.returnJsonArray(returnData)];
 	}
 }
-
-module.exports = Ghostv2Node;
