@@ -1,6 +1,6 @@
 {
   "name": "@vladoportos/n8n-nodes-ghostv2",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "n8n node for Ghost CMS API v2",
   "keywords": [
     "n8n-community-node-package"
