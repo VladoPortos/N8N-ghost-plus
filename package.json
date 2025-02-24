@@ -1,82 +1,63 @@
 {
-  "name": "n8n-nodes-ghostv2",
+  "name": "@vladoportos/n8n-nodes-ghostv2",
   "version": "0.1.0",
   "description": "n8n node for Ghost CMS V2",
-  "license": "SEE LICENSE IN LICENSE.md",
-  "homepage": "https://n8n.io",
+  "keywords": [
+    "n8n-community-node-package",
+    "n8n",
+    "ghost",
+    "cms",
+    "api"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/VladoPortos/N8N-ghost-v2",
   "author": {
-    "name": "Jan Oberhauser",
-    "email": "jan@n8n.io"
+    "name": "VladoPortos",
+    "email": "vladoportos@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/n8n-io/n8n.git"
+    "url": "git+https://github.com/VladoPortos/N8N-ghost-v2.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc && gulp build:icons && gulp build:translations",
+    "dev": "tsc --watch",
+    "format": "prettier nodes credentials --write",
+    "lint": "eslint nodes credentials package.json",
+    "lintfix": "eslint nodes credentials package.json --fix",
+    "prepublishOnly": "npm run build && npm run lint"
   },
   "files": [
     "dist"
   ],
   "n8n": {
+    "n8nNodesApiVersion": 1,
     "credentials": [
       "dist/credentials/GhostV2AdminApi.credentials.js",
       "dist/credentials/GhostV2ContentApi.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/GhostV2/GhostV2.node.js"
+      "dist/nodes/GhostV2/Ghostv2.node.js"
     ]
   },
   "devDependencies": {
     "@types/express": "^4.17.6",
-    "@types/jsonwebtoken": "^8.5.2",
-    "@types/lodash.set": "^4.3.6",
-    "@types/node": "14.17.27",
     "@types/request-promise-native": "~1.0.15",
-    "@types/moment-timezone": "^0.5.12",
-    "@types/jest": "^27.4.0",
-    "eslint-plugin-n8n-nodes-base": "^1.0.29",
-    "jest": "^27.4.7",
-    "ts-jest": "^27.1.3",
-    "gulp": "^4.0.0",
-    "n8n-core": "~0.118.0",
-    "typescript": "~4.6.0",
-    "tsc-alias": "^1.8.8",
-    "n8n-workflow": "~0.100.0"
+    "@typescript-eslint/eslint-plugin": "^8.24.1",
+    "@typescript-eslint/parser": "~5.45.1",
+    "eslint": "^8.56.0",
+    "eslint-plugin-n8n-nodes-base": "^1.16.1",
+    "gulp": "^4.0.2",
+    "n8n-core": "^0.125.0",
+    "n8n-workflow": "^0.107.0",
+    "prettier": "^2.7.1",
+    "typescript": "~4.8.4"
   },
   "dependencies": {
-    "@tryghost/admin-api": "^1.13.4",
-    "jsonwebtoken": "^8.5.1",
-    "lodash.get": "^4.4.2",
-    "lodash.set": "^4.3.2",
-    "lodash.unset": "^4.5.2",
-    "moment": "~2.29.2",
-    "moment-timezone": "^0.5.28"
-  },
-  "scripts": {
-    "dev": "npm run watch",
-    "build": "tsc && gulp build:icons && gulp build:translations",
-    "build:translations": "gulp build:translations",
-    "format": "cd ../.. && node_modules/prettier/bin-prettier.js packages/nodes-base/**/**.ts --write",
-    "lint": "tslint -p tsconfig.json -c tslint.json",
-    "lintfix": "tslint --fix -p tsconfig.json -c tslint.json",
-    "lintfix-plugin": "cd ../.. && node_modules/eslint/bin/eslint.js packages/nodes-base/nodes --fix",
-    "nodelinter": "nodelinter",
-    "watch": "tsc --watch",
-    "test": "jest"
-  },
-  "jest": {
-    "transform": {
-      "^.+\\.tsx?$": "ts-jest"
-    },
-    "testURL": "http://localhost/",
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
-    "testPathIgnorePatterns": [
-      "/dist/",
-      "/node_modules/"
-    ],
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "json"
-    ]
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/node": "^22.13.5",
+    "jsonwebtoken": "^9.0.2",
+    "moment-timezone": "^0.5.43"
   }
 }

@@ -10,7 +10,6 @@ import {
 	INodeType,
 	INodeTypeDescription,
 	NodeOperationError,
-	IBinaryData,
 } from 'n8n-workflow';
 
 import {

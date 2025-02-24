@@ -11,7 +11,7 @@ export class GhostV2ContentApi implements ICredentialType {
 
 	displayName = 'Ghost V2 Content API';
 
-	documentationUrl = 'ghost';
+	documentationUrl = 'https://ghost.org/docs/content-api/';
 
 	properties: INodeProperties[] = [
 		{
