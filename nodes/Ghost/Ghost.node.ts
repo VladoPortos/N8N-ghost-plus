@@ -13,17 +13,17 @@ import { NodeConnectionType, NodeOperationError } from 'n8n-workflow';
 import { ghostApiRequest, ghostApiRequestAllItems, validateJSON } from './GenericFunctions';
 import { postFields, postOperations } from './PostDescription';
 
-export class GhostV2 implements INodeType {
+export class Ghost implements INodeType {
 	description: INodeTypeDescription = {
-		displayName: 'Ghost V2',
-		name: 'ghostV2',
-		icon: 'file:ghostv2.svg',
+		displayName: 'Ghost',
+		name: 'ghost',
+		icon: 'file:ghost.svg',
 		group: ['input'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-		description: 'Consume Ghost API V2',
+		description: 'Consume Ghost API',
 		defaults: {
-			name: 'Ghost V2',
+			name: 'Ghost',
 		},
 		usableAsTool: true,
 		inputs: [NodeConnectionType.Main],
@@ -352,53 +352,6 @@ export class GhostV2 implements INodeType {
 								qs,
 							);
 							responseData = responseData.posts;
-						}
-
-						if (operation === 'uploadImage') {
-							const binaryPropertyName = this.getNodeParameter('binaryPropertyName', i);
-							const additionalFields = this.getNodeParameter('additionalFields', i) as IDataObject;
-
-							if (!items[i].binary) {
-								throw new NodeOperationError(this.getNode(), 'No binary data exists on item!', {
-									itemIndex: i,
-								});
-							}
-
-							const binaryData = items[i].binary[binaryPropertyName];
-							if (!binaryData) {
-								throw new NodeOperationError(
-									this.getNode(),
-									`No binary data property '${binaryPropertyName}' exists on item!`,
-									{ itemIndex: i },
-								);
-							}
-
-							// Prepare form data
-							const formData = new FormData();
-							const data = await this.helpers.getBinaryDataBuffer(i, binaryPropertyName);
-							formData.append('file', data, binaryData.fileName);
-
-							if (additionalFields.purpose) {
-								formData.append('purpose', additionalFields.purpose as string);
-							}
-							if (additionalFields.ref) {
-								formData.append('ref', additionalFields.ref as string);
-							}
-
-							const headers = {
-								'Content-Type': 'multipart/form-data',
-								...formData.getHeaders(),
-							};
-
-							responseData = await ghostApiRequest.call(
-								this,
-								'POST',
-								'/admin/images/upload/',
-								formData,
-								{},
-								{ headers },
-							);
-							responseData = responseData.images;
 						}
 					}
 				}

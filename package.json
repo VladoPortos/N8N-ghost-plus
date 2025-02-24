@@ -1,36 +1,29 @@
 {
-  "name": "n8n-nodes-ghostv2",
+  "name": "@vladoportos/n8n-nodes-ghost-v2",
   "version": "0.1.0",
-  "description": "Enhanced Ghost integration for n8n with additional features",
+  "description": "n8n node for Ghost API v2",
   "keywords": [
-    "n8n-community-node-package",
-    "ghost",
-    "blog",
-    "cms"
+    "n8n-community-node-package"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/VladoPortos/N8N-ghost-v2",
+  "homepage": "",
   "author": {
-    "name": "VladoPortos"
+    "name": "VladoPortos",
+    "email": "vlado.portos@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/VladoPortos/N8N-ghost-v2.git"
+    "url": "git+https://github.com/VladoPortos/n8n-nodes-ghost-v2.git"
   },
-  "engines": {
-    "node": ">=18.10",
-    "pnpm": ">=9.1"
-  },
-  "packageManager": "pnpm@9.1.4",
   "main": "index.js",
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
-    "build": "tsc && gulp build:icons",
+    "build": "tsc -p tsconfig.build.json && gulp build:icons",
     "dev": "tsc --watch",
     "format": "prettier nodes credentials --write",
     "lint": "eslint nodes credentials package.json",
     "lintfix": "eslint nodes credentials package.json --fix",
-    "prepublishOnly": "pnpm build && pnpm lint -c .eslintrc.prepublish.js nodes credentials package.json"
+    "prepublishOnly": "npm run build",
+    "test": "jest"
   },
   "files": [
     "dist"
@@ -38,27 +31,30 @@
   "n8n": {
     "n8nNodesApiVersion": 1,
     "credentials": [
-      "dist/credentials/GhostV2AdminApi.credentials.js",
-      "dist/credentials/GhostV2ContentApi.credentials.js"
+      "dist/credentials/GhostV2Api.credentials.js"
     ],
     "nodes": [
       "dist/nodes/GhostV2/GhostV2.node.js"
     ]
   },
-  "devDependencies": {
-    "@typescript-eslint/parser": "^7.15.0",
-    "eslint": "^8.56.0",
-    "eslint-plugin-n8n-nodes-base": "^1.16.1",
-    "gulp": "^4.0.2",
-    "prettier": "^3.3.2",
-    "typescript": "^5.3.3",
-    "@types/jsonwebtoken": "^9.0.0"
-  },
   "dependencies": {
-    "jsonwebtoken": "^9.0.0",
-    "moment-timezone": "^0.5.43"
+    "@tryghost/admin-api": "1.13.8",
+    "jsonwebtoken": "9.0.2",
+    "moment": "2.30.1",
+    "moment-timezone": "0.5.45",
+    "n8n-core": "0.125.0",
+    "n8n-workflow": "0.125.0"
   },
-  "peerDependencies": {
-    "n8n-workflow": "*"
+  "devDependencies": {
+    "@types/express": "4.17.21",
+    "@types/jsonwebtoken": "9.0.6",
+    "@types/node": "18.16.16",
+    "@types/request-promise-native": "1.0.21",
+    "@typescript-eslint/parser": "7.1.0",
+    "eslint-plugin-n8n-nodes-base": "1.16.1",
+    "gulp": "4.0.2",
+    "jest": "29.7.0",
+    "prettier": "3.2.5",
+    "typescript": "4.8.4"
   }
 }

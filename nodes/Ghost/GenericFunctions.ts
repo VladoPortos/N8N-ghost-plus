@@ -24,10 +24,10 @@ export async function ghostApiRequest(
 	if (source === 'contentApi') {
 		//https://ghost.org/faq/api-versioning/
 		version = 'v3';
-		credentialType = 'ghostV2ContentApi';
+		credentialType = 'ghostContentApi';
 	} else {
 		version = 'v2';
-		credentialType = 'ghostV2AdminApi';
+		credentialType = 'ghostAdminApi';
 	}
 
 	const credentials = await this.getCredentials(credentialType);
