@@ -51,7 +51,12 @@
     "eslint-plugin-n8n-nodes-base": "^1.16.1",
     "gulp": "^4.0.2",
     "prettier": "^3.3.2",
-    "typescript": "^5.5.3"
+    "typescript": "^5.3.3",
+    "@types/jsonwebtoken": "^9.0.0"
+  },
+  "dependencies": {
+    "jsonwebtoken": "^9.0.0",
+    "moment-timezone": "^0.5.43"
   },
   "peerDependencies": {
     "n8n-workflow": "*"

@@ -17,7 +17,7 @@ export class GhostV2 implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Ghost V2',
 		name: 'ghostV2',
-		icon: 'file:ghost.svg',
+		icon: 'file:ghostv2.svg',
 		group: ['input'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
