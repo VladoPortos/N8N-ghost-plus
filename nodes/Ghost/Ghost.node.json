@@ -1,5 +1,5 @@
 {
-	"node": "n8n-nodes-base.ghostv2",
+	"node": "n8n-nodes-base.ghost",
 	"nodeVersion": "1.0",
 	"codexVersion": "1.0",
 	"categories": [

@@ -1,4 +1,3 @@
-import jwt from 'jsonwebtoken';
 import type {
 	ICredentialDataDecryptedObject,
 	ICredentialTestRequest,
@@ -7,12 +6,12 @@ import type {
 	INodeProperties,
 } from 'n8n-workflow';
 
-export class GhostV2AdminApi implements ICredentialType {
-	name = 'ghostv2AdminApi';
+export class GhostContentApi implements ICredentialType {
+	name = 'ghostContentApi';
 
-	displayName = 'Ghost V2 Admin API';
+	displayName = 'Ghost Content API';
 
-	documentationUrl = 'https://ghost.org/docs/admin-api/';
+	documentationUrl = 'https://github.com/VladoPortos/N8N-ghost-v2';
 
 	properties: INodeProperties[] = [
 		{
@@ -35,17 +34,9 @@ export class GhostV2AdminApi implements ICredentialType {
 		credentials: ICredentialDataDecryptedObject,
 		requestOptions: IHttpRequestOptions,
 	): Promise<IHttpRequestOptions> {
-		const [id, secret] = (credentials.apiKey as string).split(':');
-		const token = jwt.sign({}, Buffer.from(secret, 'hex'), {
-			keyid: id,
-			algorithm: 'HS256',
-			expiresIn: '5m',
-			audience: '/v2/admin/',
-		});
-
-		requestOptions.headers = {
-			...requestOptions.headers,
-			Authorization: `Ghost ${token}`,
+		requestOptions.qs = {
+			...requestOptions.qs,
+			key: credentials.apiKey,
 		};
 		return requestOptions;
 	}
@@ -53,7 +44,8 @@ export class GhostV2AdminApi implements ICredentialType {
 	test: ICredentialTestRequest = {
 		request: {
 			baseURL: '={{$credentials.url}}',
-			url: '/ghost/api/v2/admin/pages/',
+			url: '/ghost/api/v3/content/settings/',
+			method: 'GET',
 		},
 	};
 }

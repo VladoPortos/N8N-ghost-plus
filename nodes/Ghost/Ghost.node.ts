@@ -1,6 +1,6 @@
 import {
 	IExecuteFunctions,
-} from 'n8n-core';
+} from 'n8n-workflow';
 
 import {
 	IDataObject,
@@ -25,23 +25,23 @@ import {
 
 import moment from 'moment-timezone';
 
-export class Ghostv2 implements INodeType {
+export class Ghost implements INodeType {
 	description: INodeTypeDescription = {
-		displayName: 'Ghost V2',
-		name: 'ghostV2',
-		icon: 'file:ghostv2.svg',
-		group: ['transform'],
+		displayName: 'Ghost',
+		name: 'ghost',
+		icon: 'file:ghost.svg',
+		group: ['input'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
 		description: 'Consume Ghost API',
 		defaults: {
-			name: 'Ghost V2',
+			name: 'Ghost',
 		},
-		inputs: ['main'],
-		outputs: ['main'],
+		inputs: ['main'] as string[],
+		outputs: ['main'] as string[],
 		credentials: [
 			{
-				name: 'ghostv2AdminApi',
+				name: 'ghostAdminApi',
 				required: true,
 				displayOptions: {
 					show: {
@@ -52,7 +52,7 @@ export class Ghostv2 implements INodeType {
 				},
 			},
 			{
-				name: 'ghostv2ContentApi',
+				name: 'ghostContentApi',
 				required: true,
 				displayOptions: {
 					show: {
@@ -344,36 +344,6 @@ export class Ghostv2 implements INodeType {
 
 							returnData.push.apply(returnData, responseData.posts);
 
-						}
-
-						if (operation === 'uploadImage') {
-							const binaryPropertyName = this.getNodeParameter('binaryPropertyName', i) as string;
-							const additionalFields = this.getNodeParameter('additionalFields', i) as IDataObject;
-							const formData: IDataObject = {};
-							
-							if (!items[i].binary) {
-								throw new NodeOperationError(this.getNode(), 'No binary data exists on item!');
-							}
-
-							const binaryData = items[i].binary![binaryPropertyName];
-							if (!binaryData) {
-								throw new NodeOperationError(this.getNode(), `No binary data property "${binaryPropertyName}" exists on item!`);
-							}
-
-							const binaryDataBuffer = await this.helpers.getBinaryDataBuffer(i, binaryPropertyName);
-							formData['file'] = {
-								value: binaryDataBuffer,
-								options: {
-									filename: binaryData.fileName,
-									contentType: binaryData.mimeType,
-								},
-							};
-							if (additionalFields.purpose) formData['purpose'] = additionalFields.purpose;
-							if (additionalFields.ref) formData['ref'] = additionalFields.ref;
-							responseData = await ghostApiRequest.call(this, 'POST', '/images/upload/', formData, {
-								headers: { 'Content-Type': 'multipart/form-data' },
-							});
-							returnData.push.apply(returnData, responseData.images);
 						}
 					}
 				}

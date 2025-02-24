@@ -1,4 +1,4 @@
-import {
+import type {
 	OptionsWithUri,
 } from 'request';
 
@@ -7,9 +7,6 @@ import {
 	IExecuteSingleFunctions,
 	IHookFunctions,
 	ILoadOptionsFunctions,
-} from 'n8n-core';
-
-import {
 	IDataObject,
 	JsonObject,
 	NodeApiError,
