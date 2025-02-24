@@ -34,7 +34,7 @@
       "dist/credentials/GhostV2ContentApi.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/GhostV2/Ghostv2.node.js"
+      "dist/nodes/GhostV2/GhostV2.node.js"
     ]
   },
   "devDependencies": {
