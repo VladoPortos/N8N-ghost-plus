@@ -7,10 +7,10 @@ import type {
 	INodeProperties,
 } from 'n8n-workflow';
 
-export class GhostAdminApi implements ICredentialType {
-	name = 'ghostAdminApi';
+export class GhostV2AdminApi implements ICredentialType {
+	name = 'ghostv2AdminApi';
 
-	displayName = 'Ghost Admin API';
+	displayName = 'Ghost V2 Admin API';
 
 	documentationUrl = 'ghost';
 

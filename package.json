@@ -1,7 +1,7 @@
 {
-  "name": "n8n-nodes-ghost",
+  "name": "n8n-nodes-ghostv2",
   "version": "0.1.0",
-  "description": "n8n node for Ghost CMS",
+  "description": "n8n node for Ghost CMS V2",
   "license": "SEE LICENSE IN LICENSE.md",
   "homepage": "https://n8n.io",
   "author": {
@@ -17,11 +17,11 @@
   ],
   "n8n": {
     "credentials": [
-      "dist/credentials/GhostAdminApi.credentials.js",
-      "dist/credentials/GhostContentApi.credentials.js"
+      "dist/credentials/GhostV2AdminApi.credentials.js",
+      "dist/credentials/GhostV2ContentApi.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/Ghost/Ghost.node.js"
+      "dist/nodes/GhostV2/GhostV2.node.js"
     ]
   },
   "devDependencies": {
