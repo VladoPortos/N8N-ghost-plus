@@ -10,6 +10,40 @@ export const postOperations: INodeProperties[] = [
 		noDataExpression: true,
 		displayOptions: {
 			show: {
+				source: [
+					'contentApi',
+				],
+				resource: [
+					'post',
+				],
+			},
+		},
+		options: [
+			{
+				name: 'Get',
+				value: 'get',
+				description: 'Get a single post by ID or slug',
+				action: 'Get a post',
+			},
+			{
+				name: 'Get Many',
+				value: 'getAll',
+				description: 'Get multiple posts',
+				action: 'Get many posts',
+			},
+		],
+		default: 'get',
+	},
+	{
+		displayName: 'Operation',
+		name: 'operation',
+		type: 'options',
+		noDataExpression: true,
+		displayOptions: {
+			show: {
+				source: [
+					'adminApi',
+				],
 				resource: [
 					'post',
 				],
@@ -21,67 +55,30 @@ export const postOperations: INodeProperties[] = [
 				value: 'create',
 				description: 'Create a new post',
 				action: 'Create a post',
-				displayOptions: {
-					show: {
-						source: [
-							'adminApi',
-						],
-					},
-				},
 			},
 			{
 				name: 'Delete',
 				value: 'delete',
 				description: 'Delete a post',
 				action: 'Delete a post',
-				displayOptions: {
-					show: {
-						source: [
-							'adminApi',
-						],
-					},
-				},
 			},
 			{
 				name: 'Get',
 				value: 'get',
 				description: 'Get a single post by ID or slug',
 				action: 'Get a post',
-				displayOptions: {
-					show: {
-						source: [
-							'contentApi',
-							'adminApi',
-						],
-					},
-				},
 			},
 			{
 				name: 'Get Many',
 				value: 'getAll',
 				description: 'Get multiple posts',
 				action: 'Get many posts',
-				displayOptions: {
-					show: {
-						source: [
-							'contentApi',
-							'adminApi',
-						],
-					},
-				},
 			},
 			{
 				name: 'Update',
 				value: 'update',
 				description: 'Update a post',
 				action: 'Update a post',
-				displayOptions: {
-					show: {
-						source: [
-							'adminApi',
-						],
-					},
-				},
 			},
 		],
 		default: 'get',
