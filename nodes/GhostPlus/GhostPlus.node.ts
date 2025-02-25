@@ -33,7 +33,7 @@ export class GhostPlus implements INodeType {
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-		description: 'Consume Ghost Content API',
+		description: 'Consume Ghost API V2 with enhanced features',
 		defaults: {
 			name: 'Ghost Plus',
 		},
@@ -43,19 +43,32 @@ export class GhostPlus implements INodeType {
 			{
 				name: 'ghostPlusAdminApi',
 				required: true,
-				testedBy: 'ghostPlusAdminApiTest',
+				displayOptions: {
+					show: {
+						source: [
+							'adminApi',
+						],
+					},
+				},
 			},
 			{
 				name: 'ghostPlusContentApi',
 				required: true,
-				testedBy: 'ghostPlusContentApiTest',
+				displayOptions: {
+					show: {
+						source: [
+							'contentApi',
+						],
+					},
+				},
 			},
 		],
 		properties: [
 			{
-				displayName: 'Credential Type',
+				displayName: 'Source',
 				name: 'source',
 				type: 'options',
+				description: 'Pick where your data comes from, Content or Admin API',
 				options: [
 					{
 						name: 'Admin API',
@@ -67,7 +80,6 @@ export class GhostPlus implements INodeType {
 					},
 				],
 				default: 'contentApi',
-				description: 'Choose between Admin API and Content API',
 			},
 			{
 				displayName: 'Resource',
