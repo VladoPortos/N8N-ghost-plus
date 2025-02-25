@@ -4,14 +4,15 @@ import {
 
 export const postOperations: INodeProperties[] = [
 	{
-		displayName: 'Operation',
+		displayName: 'Get a Post',
 		name: 'operation',
-		noDataExpression: true,
 		type: 'options',
+		noDataExpression: true,
 		displayOptions: {
 			show: {
 				source: [
 					'contentApi',
+					'adminApi',
 				],
 				resource: [
 					'post',
@@ -20,25 +21,43 @@ export const postOperations: INodeProperties[] = [
 		},
 		options: [
 			{
-				name: 'Get',
+				name: 'Get a Post',
 				value: 'get',
-				description: 'Get a post',
 				action: 'Get a post',
-			},
-			{
-				name: 'Get Many',
-				value: 'getAll',
-				description: 'Get many posts',
-				action: 'Get many posts',
 			},
 		],
 		default: 'get',
 	},
 	{
-		displayName: 'Operation',
+		displayName: 'Get Many Posts',
 		name: 'operation',
-		noDataExpression: true,
 		type: 'options',
+		noDataExpression: true,
+		displayOptions: {
+			show: {
+				source: [
+					'contentApi',
+					'adminApi',
+				],
+				resource: [
+					'post',
+				],
+			},
+		},
+		options: [
+			{
+				name: 'Get Many',
+				value: 'getAll',
+				action: 'Get many posts',
+			},
+		],
+		default: 'getAll',
+	},
+	{
+		displayName: 'Create a Post',
+		name: 'operation',
+		type: 'options',
+		noDataExpression: true,
 		displayOptions: {
 			show: {
 				source: [
@@ -51,37 +70,60 @@ export const postOperations: INodeProperties[] = [
 		},
 		options: [
 			{
-				name: 'Create',
+				name: 'Create a Post',
 				value: 'create',
-				description: 'Create a post',
 				action: 'Create a post',
 			},
+		],
+		default: 'create',
+	},
+	{
+		displayName: 'Delete a Post',
+		name: 'operation',
+		type: 'options',
+		noDataExpression: true,
+		displayOptions: {
+			show: {
+				source: [
+					'adminApi',
+				],
+				resource: [
+					'post',
+				],
+			},
+		},
+		options: [
 			{
-				name: 'Delete',
+				name: 'Delete a Post',
 				value: 'delete',
-				description: 'Delete a post',
 				action: 'Delete a post',
 			},
-			{
-				name: 'Get',
-				value: 'get',
-				description: 'Get a post',
-				action: 'Get a post',
+		],
+		default: 'delete',
+	},
+	{
+		displayName: 'Update a Post',
+		name: 'operation',
+		type: 'options',
+		noDataExpression: true,
+		displayOptions: {
+			show: {
+				source: [
+					'adminApi',
+				],
+				resource: [
+					'post',
+				],
 			},
+		},
+		options: [
 			{
-				name: 'Get Many',
-				value: 'getAll',
-				description: 'Get many posts',
-				action: 'Get many posts',
-			},
-			{
-				name: 'Update',
+				name: 'Update a Post',
 				value: 'update',
-				description: 'Update a post',
 				action: 'Update a post',
 			},
 		],
-		default: 'get',
+		default: 'update',
 	},
 ];
 
@@ -108,7 +150,6 @@ export const postFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'Post\'s title',
 	},
 	{
 		displayName: 'Content Format',
@@ -138,7 +179,6 @@ export const postFields: INodeProperties[] = [
 			},
 		],
 		default: 'html',
-		description: 'The format of the post',
 	},
 	{
 		displayName: 'Content',
@@ -164,7 +204,6 @@ export const postFields: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'The content of the post to create',
 	},
 	{
 		displayName: 'Content (JSON)',
@@ -188,7 +227,6 @@ export const postFields: INodeProperties[] = [
 		},
 
 		default: '',
-		description: 'Mobiledoc is the raw JSON format that Ghost uses to store post contents. <a href="https://ghost.org/docs/concepts/posts/#document-storage">Info</a>.',
 	},
 	{
 		displayName: 'Additional Fields',
@@ -231,35 +269,30 @@ export const postFields: INodeProperties[] = [
 				name: 'codeinjection_foot',
 				type: 'string',
 				default: '',
-				description: 'The Code Injection allows you inject a small snippet into your Ghost site',
 			},
 			{
 				displayName: 'Code Injection Head',
 				name: 'codeinjection_head',
 				type: 'string',
 				default: '',
-				description: 'The Code Injection allows you inject a small snippet into your Ghost site',
 			},
 			{
 				displayName: 'Feature Image',
 				name: 'feature_image',
 				type: 'string',
 				default: '',
-				description: 'URL of the feature image',
 			},
 			{
 				displayName: 'Feature Image Alt Text',
 				name: 'feature_image_alt',
 				type: 'string',
 				default: '',
-				description: 'Alternative text for the feature image',
 			},
 			{
 				displayName: 'Feature Image Caption',
 				name: 'feature_image_caption',
 				type: 'string',
 				default: '',
-				description: 'Caption for the feature image',
 			},
 			{
 				displayName: 'Featured',
@@ -290,7 +323,6 @@ export const postFields: INodeProperties[] = [
 				name: 'og_image',
 				type: 'string',
 				default: '',
-				description: 'URL of the image',
 			},
 			{
 				displayName: 'Open Graph Title',
@@ -351,7 +383,6 @@ export const postFields: INodeProperties[] = [
 				name: 'twitter_image',
 				type: 'string',
 				default: '',
-				description: 'URL of the image',
 			},
 			{
 				displayName: 'Twitter Title',
@@ -384,7 +415,6 @@ export const postFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The ID of the post to delete',
 	},
 
 	/* -------------------------------------------------------------------------- */
@@ -420,7 +450,6 @@ export const postFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'Get the post either by slug or ID',
 	},
 	{
 		displayName: 'Identifier',
@@ -442,7 +471,6 @@ export const postFields: INodeProperties[] = [
 				],
 			},
 		},
-		description: 'The ID or slug of the post to get',
 	},
 	{
 		displayName: 'Options',
@@ -469,7 +497,6 @@ export const postFields: INodeProperties[] = [
 				name: 'fields',
 				type: 'string',
 				default: '',
-				description: 'Limit the fields returned in the response object. E.g. for posts fields=title,URL.',
 			},
 			{
 				displayName: 'Formats',
@@ -516,7 +543,6 @@ export const postFields: INodeProperties[] = [
 				name: 'fields',
 				type: 'string',
 				default: '',
-				description: 'Limit the fields returned in the response object. E.g. for posts fields=title,URL.',
 			},
 			{
 				displayName: 'Formats',
@@ -548,13 +574,6 @@ export const postFields: INodeProperties[] = [
 		type: 'boolean',
 		displayOptions: {
 			show: {
-				source: [
-					'contentApi',
-					'adminApi',
-				],
-				resource: [
-					'post',
-				],
 				operation: [
 					'getAll',
 				],
@@ -569,13 +588,6 @@ export const postFields: INodeProperties[] = [
 		type: 'number',
 		displayOptions: {
 			show: {
-				source: [
-					'adminApi',
-					'contentApi',
-				],
-				resource: [
-					'post',
-				],
 				operation: [
 					'getAll',
 				],
@@ -625,14 +637,12 @@ export const postFields: INodeProperties[] = [
 					},
 				],
 				default: [],
-				description: 'Tells the API to return additional data related to the resource you have requested',
 			},
 			{
 				displayName: 'Fields',
 				name: 'fields',
 				type: 'string',
 				default: '',
-				description: 'Limit the fields returned in the response object. E.g. for posts fields=title,URL.',
 			},
 			{
 				displayName: 'Formats',
@@ -651,7 +661,6 @@ export const postFields: INodeProperties[] = [
 				default: [
 					'html',
 				],
-				description: 'By default, only html is returned, however each post and page in Ghost has 2 available formats: html and plaintext',
 			},
 		],
 	},
@@ -690,14 +699,12 @@ export const postFields: INodeProperties[] = [
 					},
 				],
 				default: [],
-				description: 'Tells the API to return additional data related to the resource you have requested',
 			},
 			{
 				displayName: 'Fields',
 				name: 'fields',
 				type: 'string',
 				default: '',
-				description: 'Limit the fields returned in the response object. E.g. for posts fields=title,URL.',
 			},
 			{
 				displayName: 'Formats',
@@ -741,7 +748,6 @@ export const postFields: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'The ID of the post to update',
 	},
 	{
 		displayName: 'Content Format',
@@ -771,7 +777,6 @@ export const postFields: INodeProperties[] = [
 			},
 		],
 		default: 'html',
-		description: 'The format of the post',
 	},
 	{
 		displayName: 'Update Fields',
@@ -849,42 +854,36 @@ export const postFields: INodeProperties[] = [
 					},
 				},
 				default: '',
-				description: 'Mobiledoc is the raw JSON format that Ghost uses to store post contents. <a href="https://ghost.org/docs/concepts/posts/#document-storage">Info.</a>.',
 			},
 			{
 				displayName: 'Feature Image',
 				name: 'feature_image',
 				type: 'string',
 				default: '',
-				description: 'URL of the feature image',
 			},
 			{
 				displayName: 'Feature Image Alt Text',
 				name: 'feature_image_alt',
 				type: 'string',
 				default: '',
-				description: 'Alternative text for the feature image',
 			},
 			{
 				displayName: 'Feature Image Caption',
 				name: 'feature_image_caption',
 				type: 'string',
 				default: '',
-				description: 'Caption for the feature image',
 			},
 			{
 				displayName: 'Feature Image Height',
 				name: 'feature_image_height',
 				type: 'number',
 				default: '',
-				description: 'Height of the feature image',
 			},
 			{
 				displayName: 'Feature Image Width',
 				name: 'feature_image_width',
 				type: 'number',
 				default: '',
-				description: 'Width of the feature image',
 			},
 			{
 				displayName: 'Featured',
@@ -915,7 +914,6 @@ export const postFields: INodeProperties[] = [
 				name: 'og_image',
 				type: 'string',
 				default: '',
-				description: 'URL of the image',
 			},
 			{
 				displayName: 'Open Graph Title',
@@ -970,7 +968,6 @@ export const postFields: INodeProperties[] = [
 				name: 'title',
 				type: 'string',
 				default: '',
-				description: 'Post\'s title',
 			},
 			{
 				displayName: 'Twitter Description',
@@ -983,7 +980,6 @@ export const postFields: INodeProperties[] = [
 				name: 'twitter_image',
 				type: 'string',
 				default: '',
-				description: 'URL of the image',
 			},
 			{
 				displayName: 'Twitter Title',
