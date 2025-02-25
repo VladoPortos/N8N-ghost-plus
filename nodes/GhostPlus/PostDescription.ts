@@ -214,7 +214,7 @@ export const postFields: INodeProperties[] = [
 				displayName: 'Authors ID Names or IDs',
 				name: 'authors',
 				type: 'multiOptions',
-				description: 'Multiple authors',
+				description: 'Multiple authors. Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
 				typeOptions: {
 					loadOptionsMethod: 'getAuthors',
 				},
@@ -256,13 +256,6 @@ export const postFields: INodeProperties[] = [
 				description: 'Mobiledoc is the raw JSON format that Ghost uses to store post contents. <a href="https://ghost.org/docs/concepts/posts/#document-storage">Info.</a>.',
 			},
 			{
-				displayName: 'Featured',
-				name: 'featured',
-				type: 'boolean',
-				default: false,
-				description: 'Makes the post a featured post',
-			},
-			{
 				displayName: 'Feature Image Alt Text',
 				name: 'feature_image_alt',
 				type: 'string',
@@ -284,25 +277,29 @@ export const postFields: INodeProperties[] = [
 				description: 'URL of the feature image',
 			},
 			{
+				displayName: 'Featured',
+				name: 'featured',
+				type: 'boolean',
+				default: false,
+				description: 'Makes the post a featured post',
+			},
+			{
 				displayName: 'Meta Description',
 				name: 'meta_description',
 				type: 'string',
 				default: '',
-				description: 'Meta description',
 			},
 			{
 				displayName: 'Meta Title',
 				name: 'meta_title',
 				type: 'string',
 				default: '',
-				description: 'Meta title',
 			},
 			{
 				displayName: 'Open Graph Description',
 				name: 'og_description',
 				type: 'string',
 				default: '',
-				description: 'Open Graph description',
 			},
 			{
 				displayName: 'Open Graph Image',
@@ -316,7 +313,6 @@ export const postFields: INodeProperties[] = [
 				name: 'og_title',
 				type: 'string',
 				default: '',
-				description: 'Open Graph title',
 			},
 			{
 				displayName: 'Published At',
@@ -361,7 +357,7 @@ export const postFields: INodeProperties[] = [
 					loadOptionsMethod: 'getTags',
 				},
 				default: [],
-				description: 'Tags to add to post. Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>.',
+				description: 'Tags to add to post. Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>. Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>.',
 			},
 			{
 				displayName: 'Title',
@@ -375,7 +371,6 @@ export const postFields: INodeProperties[] = [
 				name: 'twitter_description',
 				type: 'string',
 				default: '',
-				description: 'Twitter description',
 			},
 			{
 				displayName: 'Twitter Image',
@@ -389,7 +384,6 @@ export const postFields: INodeProperties[] = [
 				name: 'twitter_title',
 				type: 'string',
 				default: '',
-				description: 'Twitter title',
 			},
 		],
 	},
@@ -884,13 +878,6 @@ export const postFields: INodeProperties[] = [
 				description: 'Mobiledoc is the raw JSON format that Ghost uses to store post contents. <a href="https://ghost.org/docs/concepts/posts/#document-storage">Info.</a>.',
 			},
 			{
-				displayName: 'Feature Image URL',
-				name: 'feature_image',
-				type: 'string',
-				default: '',
-				description: 'URL of the feature image',
-			},
-			{
 				displayName: 'Feature Image Alt Text',
 				name: 'feature_image_alt',
 				type: 'string',
@@ -903,6 +890,13 @@ export const postFields: INodeProperties[] = [
 				type: 'string',
 				default: '',
 				description: 'Caption for the feature image',
+			},
+			{
+				displayName: 'Feature Image URL',
+				name: 'feature_image',
+				type: 'string',
+				default: '',
+				description: 'URL of the feature image',
 			},
 			{
 				displayName: 'Featured',
