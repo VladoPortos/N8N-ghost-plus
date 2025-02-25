@@ -89,10 +89,12 @@ export class GhostPlus implements INodeType {
 					{
 						name: 'Post',
 						value: 'post',
+						description: 'Work with Ghost blog posts',
 					},
 				],
 				noDataExpression: true,
 				default: 'post',
+				description: 'Choose the resource type',
 			},
 			...postOperations,
 			...postFields,

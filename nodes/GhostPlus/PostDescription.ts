@@ -4,7 +4,7 @@ import {
 
 export const postOperations: INodeProperties[] = [
 	{
-		displayName: 'Get a Post',
+		displayName: 'Operation',
 		name: 'operation',
 		type: 'options',
 		noDataExpression: true,
@@ -21,109 +21,58 @@ export const postOperations: INodeProperties[] = [
 		},
 		options: [
 			{
-				name: 'Get a Post',
+				name: 'Create',
+				value: 'create',
+				description: 'Create a new post',
+				action: 'Create a post',
+				displayOptions: {
+					show: {
+						source: [
+							'adminApi',
+						],
+					},
+				},
+			},
+			{
+				name: 'Delete',
+				value: 'delete',
+				description: 'Delete a post',
+				action: 'Delete a post',
+				displayOptions: {
+					show: {
+						source: [
+							'adminApi',
+						],
+					},
+				},
+			},
+			{
+				name: 'Get',
 				value: 'get',
+				description: 'Get a single post by ID or slug',
 				action: 'Get a post',
 			},
-		],
-		default: 'get',
-	},
-	{
-		displayName: 'Get Many Posts',
-		name: 'operation',
-		type: 'options',
-		noDataExpression: true,
-		displayOptions: {
-			show: {
-				source: [
-					'contentApi',
-					'adminApi',
-				],
-				resource: [
-					'post',
-				],
-			},
-		},
-		options: [
 			{
 				name: 'Get Many',
 				value: 'getAll',
+				description: 'Get multiple posts',
 				action: 'Get many posts',
 			},
-		],
-		default: 'getAll',
-	},
-	{
-		displayName: 'Create a Post',
-		name: 'operation',
-		type: 'options',
-		noDataExpression: true,
-		displayOptions: {
-			show: {
-				source: [
-					'adminApi',
-				],
-				resource: [
-					'post',
-				],
-			},
-		},
-		options: [
 			{
-				name: 'Create a Post',
-				value: 'create',
-				action: 'Create a post',
-			},
-		],
-		default: 'create',
-	},
-	{
-		displayName: 'Delete a Post',
-		name: 'operation',
-		type: 'options',
-		noDataExpression: true,
-		displayOptions: {
-			show: {
-				source: [
-					'adminApi',
-				],
-				resource: [
-					'post',
-				],
-			},
-		},
-		options: [
-			{
-				name: 'Delete a Post',
-				value: 'delete',
-				action: 'Delete a post',
-			},
-		],
-		default: 'delete',
-	},
-	{
-		displayName: 'Update a Post',
-		name: 'operation',
-		type: 'options',
-		noDataExpression: true,
-		displayOptions: {
-			show: {
-				source: [
-					'adminApi',
-				],
-				resource: [
-					'post',
-				],
-			},
-		},
-		options: [
-			{
-				name: 'Update a Post',
+				name: 'Update',
 				value: 'update',
+				description: 'Update a post',
 				action: 'Update a post',
+				displayOptions: {
+					show: {
+						source: [
+							'adminApi',
+						],
+					},
+				},
 			},
 		],
-		default: 'update',
+		default: 'get',
 	},
 ];
 
