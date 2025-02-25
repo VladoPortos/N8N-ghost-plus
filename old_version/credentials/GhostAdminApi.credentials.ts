@@ -12,7 +12,7 @@ export class GhostAdminApi implements ICredentialType {
 
 	displayName = 'Ghost Admin API';
 
-	documentationUrl = 'https://github.com/VladoPortos/N8N-ghost-v2';
+	documentationUrl = 'ghost';
 
 	properties: INodeProperties[] = [
 		{

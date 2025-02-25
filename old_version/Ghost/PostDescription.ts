@@ -1,6 +1,4 @@
-import {
-	INodeProperties,
-} from 'n8n-workflow';
+import type { INodeProperties } from 'n8n-workflow';
 
 export const postOperations: INodeProperties[] = [
 	{
@@ -10,12 +8,8 @@ export const postOperations: INodeProperties[] = [
 		type: 'options',
 		displayOptions: {
 			show: {
-				source: [
-					'contentApi',
-				],
-				resource: [
-					'post',
-				],
+				source: ['contentApi'],
+				resource: ['post'],
 			},
 		},
 		options: [
@@ -41,12 +35,8 @@ export const postOperations: INodeProperties[] = [
 		type: 'options',
 		displayOptions: {
 			show: {
-				source: [
-					'adminApi',
-				],
-				resource: [
-					'post',
-				],
+				source: ['adminApi'],
+				resource: ['post'],
 			},
 		},
 		options: [
@@ -97,18 +87,12 @@ export const postFields: INodeProperties[] = [
 		required: true,
 		displayOptions: {
 			show: {
-				source: [
-					'adminApi',
-				],
-				resource: [
-					'post',
-				],
-				operation: [
-					'create',
-				],
+				source: ['adminApi'],
+				resource: ['post'],
+				operation: ['create'],
 			},
 		},
-		description: 'Post\'s title',
+		description: "Post's title",
 	},
 	{
 		displayName: 'Content Format',
@@ -116,15 +100,9 @@ export const postFields: INodeProperties[] = [
 		type: 'options',
 		displayOptions: {
 			show: {
-				source: [
-					'adminApi',
-				],
-				resource: [
-					'post',
-				],
-				operation: [
-					'create',
-				],
+				source: ['adminApi'],
+				resource: ['post'],
+				operation: ['create'],
 			},
 		},
 		options: [
@@ -136,6 +114,10 @@ export const postFields: INodeProperties[] = [
 				name: 'Mobile Doc',
 				value: 'mobileDoc',
 			},
+			{
+				name: 'Lexical',
+				value: 'lexical',
+			},
 		],
 		default: 'html',
 		description: 'The format of the post',
@@ -144,23 +126,12 @@ export const postFields: INodeProperties[] = [
 		displayName: 'Content',
 		name: 'content',
 		type: 'string',
-		typeOptions: {
-			alwaysOpenEditWindow: true,
-		},
 		displayOptions: {
 			show: {
-				source: [
-					'adminApi',
-				],
-				resource: [
-					'post',
-				],
-				operation: [
-					'create',
-				],
-				contentFormat: [
-					'html',
-				],
+				source: ['adminApi'],
+				resource: ['post'],
+				operation: ['create'],
+				contentFormat: ['html'],
 			},
 		},
 		default: '',
@@ -172,23 +143,32 @@ export const postFields: INodeProperties[] = [
 		type: 'json',
 		displayOptions: {
 			show: {
-				source: [
-					'adminApi',
-				],
-				resource: [
-					'post',
-				],
-				operation: [
-					'create',
-				],
-				contentFormat: [
-					'mobileDoc',
-				],
+				source: ['adminApi'],
+				resource: ['post'],
+				operation: ['create'],
+				contentFormat: ['mobileDoc'],
 			},
 		},
 
 		default: '',
-		description: 'Mobiledoc is the raw JSON format that Ghost uses to store post contents. <a href="https://ghost.org/docs/concepts/posts/#document-storage">Info</a>.',
+		description:
+			'Mobiledoc is the raw JSON format that Ghost uses to store post contents. <a href="https://ghost.org/docs/concepts/posts/#document-storage">Info</a>.',
+	},
+	{
+		displayName: 'Content (JSON)',
+		name: 'content',
+		type: 'json',
+		displayOptions: {
+			show: {
+				source: ['adminApi'],
+				resource: ['post'],
+				operation: ['create'],
+				contentFormat: ['lexical'],
+			},
+		},
+
+		default: '',
+		description: 'Lexical is the JSON format returned by the Ghost Default editor',
 	},
 	{
 		displayName: 'Additional Fields',
@@ -198,23 +178,18 @@ export const postFields: INodeProperties[] = [
 		default: {},
 		displayOptions: {
 			show: {
-				source: [
-					'adminApi',
-				],
-				resource: [
-					'post',
-				],
-				operation: [
-					'create',
-				],
+				source: ['adminApi'],
+				resource: ['post'],
+				operation: ['create'],
 			},
 		},
 		options: [
 			{
-				displayName: 'Authors ID Names or IDs',
+				displayName: 'Author Names or IDs',
 				name: 'authors',
 				type: 'multiOptions',
-				description: 'Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
+				description:
+					'Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
 				typeOptions: {
 					loadOptionsMethod: 'getAuthors',
 				},
@@ -270,7 +245,6 @@ export const postFields: INodeProperties[] = [
 				type: 'string',
 				default: '',
 				description: 'URL of the image',
-
 			},
 			{
 				displayName: 'Open Graph Title',
@@ -314,7 +288,8 @@ export const postFields: INodeProperties[] = [
 				displayName: 'Tag Names or IDs',
 				name: 'tags',
 				type: 'multiOptions',
-				description: 'Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
+				description:
+					'Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
 				typeOptions: {
 					loadOptionsMethod: 'getTags',
 				},
@@ -353,15 +328,9 @@ export const postFields: INodeProperties[] = [
 		required: true,
 		displayOptions: {
 			show: {
-				source: [
-					'adminApi',
-				],
-				resource: [
-					'post',
-				],
-				operation: [
-					'delete',
-				],
+				source: ['adminApi'],
+				resource: ['post'],
+				operation: ['delete'],
 			},
 		},
 		description: 'The ID of the post to delete',
@@ -388,16 +357,9 @@ export const postFields: INodeProperties[] = [
 		],
 		displayOptions: {
 			show: {
-				source: [
-					'contentApi',
-					'adminApi',
-				],
-				resource: [
-					'post',
-				],
-				operation: [
-					'get',
-				],
+				source: ['contentApi', 'adminApi'],
+				resource: ['post'],
+				operation: ['get'],
 			},
 		},
 		description: 'Get the post either by slug or ID',
@@ -410,16 +372,9 @@ export const postFields: INodeProperties[] = [
 		required: true,
 		displayOptions: {
 			show: {
-				source: [
-					'contentApi',
-					'adminApi',
-				],
-				resource: [
-					'post',
-				],
-				operation: [
-					'get',
-				],
+				source: ['contentApi', 'adminApi'],
+				resource: ['post'],
+				operation: ['get'],
 			},
 		},
 		description: 'The ID or slug of the post to get',
@@ -428,19 +383,13 @@ export const postFields: INodeProperties[] = [
 		displayName: 'Options',
 		name: 'options',
 		type: 'collection',
-		placeholder: 'Add Option',
+		placeholder: 'Add option',
 		default: {},
 		displayOptions: {
 			show: {
-				source: [
-					'adminApi',
-				],
-				resource: [
-					'post',
-				],
-				operation: [
-					'get',
-				],
+				source: ['adminApi'],
+				resource: ['post'],
+				operation: ['get'],
 			},
 		},
 		options: [
@@ -449,7 +398,9 @@ export const postFields: INodeProperties[] = [
 				name: 'fields',
 				type: 'string',
 				default: '',
-				description: 'Limit the fields returned in the response object. E.g. for posts fields=title,URL.',
+				// eslint-disable-next-line n8n-nodes-base/node-param-description-miscased-url
+				description:
+					'Limit the fields returned in the response object. E.g. for posts fields=title,url.',
 			},
 			{
 				displayName: 'Formats',
@@ -464,10 +415,12 @@ export const postFields: INodeProperties[] = [
 						name: 'Mobile Doc',
 						value: 'mobiledoc',
 					},
+					{
+						name: 'Lexical',
+						value: 'lexical',
+					},
 				],
-				default: [
-					'mobiledoc',
-				],
+				default: ['mobiledoc'],
 			},
 		],
 	},
@@ -475,19 +428,13 @@ export const postFields: INodeProperties[] = [
 		displayName: 'Options',
 		name: 'options',
 		type: 'collection',
-		placeholder: 'Add Option',
+		placeholder: 'Add option',
 		default: {},
 		displayOptions: {
 			show: {
-				source: [
-					'contentApi',
-				],
-				resource: [
-					'post',
-				],
-				operation: [
-					'get',
-				],
+				source: ['contentApi'],
+				resource: ['post'],
+				operation: ['get'],
 			},
 		},
 		options: [
@@ -496,7 +443,9 @@ export const postFields: INodeProperties[] = [
 				name: 'fields',
 				type: 'string',
 				default: '',
-				description: 'Limit the fields returned in the response object. E.g. for posts fields=title,URL.',
+				// eslint-disable-next-line n8n-nodes-base/node-param-description-miscased-url
+				description:
+					'Limit the fields returned in the response object. E.g. for posts fields=title,url.',
 			},
 			{
 				displayName: 'Formats',
@@ -512,9 +461,7 @@ export const postFields: INodeProperties[] = [
 						value: 'plaintext',
 					},
 				],
-				default: [
-					'html',
-				],
+				default: ['html'],
 			},
 		],
 	},
@@ -528,16 +475,9 @@ export const postFields: INodeProperties[] = [
 		type: 'boolean',
 		displayOptions: {
 			show: {
-				source: [
-					'contentApi',
-					'adminApi',
-				],
-				resource: [
-					'post',
-				],
-				operation: [
-					'getAll',
-				],
+				source: ['contentApi', 'adminApi'],
+				resource: ['post'],
+				operation: ['getAll'],
 			},
 		},
 		default: false,
@@ -549,23 +489,15 @@ export const postFields: INodeProperties[] = [
 		type: 'number',
 		displayOptions: {
 			show: {
-				source: [
-					'adminApi',
-					'contentApi',
-				],
-				resource: [
-					'post',
-				],
-				operation: [
-					'getAll',
-				],
-				returnAll: [
-					false,
-				],
+				source: ['adminApi', 'contentApi'],
+				resource: ['post'],
+				operation: ['getAll'],
+				returnAll: [false],
 			},
 		},
 		typeOptions: {
 			minValue: 1,
+			maxValue: 100,
 		},
 		default: 50,
 		description: 'Max number of results to return',
@@ -574,19 +506,13 @@ export const postFields: INodeProperties[] = [
 		displayName: 'Options',
 		name: 'options',
 		type: 'collection',
-		placeholder: 'Add Option',
+		placeholder: 'Add option',
 		default: {},
 		displayOptions: {
 			show: {
-				source: [
-					'contentApi',
-				],
-				resource: [
-					'post',
-				],
-				operation: [
-					'getAll',
-				],
+				source: ['contentApi'],
+				resource: ['post'],
+				operation: ['getAll'],
 			},
 		},
 		options: [
@@ -605,14 +531,17 @@ export const postFields: INodeProperties[] = [
 					},
 				],
 				default: [],
-				description: 'Tells the API to return additional data related to the resource you have requested',
+				description:
+					'Tells the API to return additional data related to the resource you have requested',
 			},
 			{
 				displayName: 'Fields',
 				name: 'fields',
 				type: 'string',
 				default: '',
-				description: 'Limit the fields returned in the response object. E.g. for posts fields=title,URL.',
+				// eslint-disable-next-line n8n-nodes-base/node-param-description-miscased-url
+				description:
+					'Limit the fields returned in the response object. E.g. for posts fields=title,url.',
 			},
 			{
 				displayName: 'Formats',
@@ -627,11 +556,14 @@ export const postFields: INodeProperties[] = [
 						name: 'Plaintext',
 						value: 'plaintext',
 					},
+					{
+						name: 'Lexical',
+						value: 'lexical',
+					},
 				],
-				default: [
-					'html',
-				],
-				description: 'By default, only html is returned, however each post and page in Ghost has 2 available formats: html and plaintext',
+				default: ['html'],
+				description:
+					'By default, only html is returned, however each post and page in Ghost has 2 available formats: html and plaintext',
 			},
 		],
 	},
@@ -639,19 +571,13 @@ export const postFields: INodeProperties[] = [
 		displayName: 'Options',
 		name: 'options',
 		type: 'collection',
-		placeholder: 'Add Option',
+		placeholder: 'Add option',
 		default: {},
 		displayOptions: {
 			show: {
-				source: [
-					'adminApi',
-				],
-				resource: [
-					'post',
-				],
-				operation: [
-					'getAll',
-				],
+				source: ['adminApi'],
+				resource: ['post'],
+				operation: ['getAll'],
 			},
 		},
 		options: [
@@ -670,14 +596,17 @@ export const postFields: INodeProperties[] = [
 					},
 				],
 				default: [],
-				description: 'Tells the API to return additional data related to the resource you have requested',
+				description:
+					'Tells the API to return additional data related to the resource you have requested',
 			},
 			{
 				displayName: 'Fields',
 				name: 'fields',
 				type: 'string',
 				default: '',
-				description: 'Limit the fields returned in the response object. E.g. for posts fields=title,URL.',
+				// eslint-disable-next-line n8n-nodes-base/node-param-description-miscased-url
+				description:
+					'Limit the fields returned in the response object. E.g. for posts fields=title,url.',
 			},
 			{
 				displayName: 'Formats',
@@ -692,10 +621,12 @@ export const postFields: INodeProperties[] = [
 						name: 'Mobile Doc',
 						value: 'mobiledoc',
 					},
+					{
+						name: 'Lexical',
+						value: 'lexical',
+					},
 				],
-				default: [
-					'mobiledoc',
-				],
+				default: ['mobiledoc'],
 			},
 		],
 	},
@@ -709,15 +640,9 @@ export const postFields: INodeProperties[] = [
 		type: 'string',
 		displayOptions: {
 			show: {
-				source: [
-					'adminApi',
-				],
-				resource: [
-					'post',
-				],
-				operation: [
-					'update',
-				],
+				source: ['adminApi'],
+				resource: ['post'],
+				operation: ['update'],
 			},
 		},
 		default: '',
@@ -729,15 +654,9 @@ export const postFields: INodeProperties[] = [
 		type: 'options',
 		displayOptions: {
 			show: {
-				source: [
-					'adminApi',
-				],
-				resource: [
-					'post',
-				],
-				operation: [
-					'update',
-				],
+				source: ['adminApi'],
+				resource: ['post'],
+				operation: ['update'],
 			},
 		},
 		options: [
@@ -748,6 +667,10 @@ export const postFields: INodeProperties[] = [
 			{
 				name: 'Mobile Doc',
 				value: 'mobileDoc',
+			},
+			{
+				name: 'Lexical',
+				value: 'lexical',
 			},
 		],
 		default: 'html',
@@ -761,23 +684,18 @@ export const postFields: INodeProperties[] = [
 		default: {},
 		displayOptions: {
 			show: {
-				source: [
-					'adminApi',
-				],
-				resource: [
-					'post',
-				],
-				operation: [
-					'update',
-				],
+				source: ['adminApi'],
+				resource: ['post'],
+				operation: ['update'],
 			},
 		},
 		options: [
 			{
-				displayName: 'Authors ID Names or IDs',
+				displayName: 'Author Names or IDs',
 				name: 'authors',
 				type: 'multiOptions',
-				description: 'Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
+				description:
+					'Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
 				typeOptions: {
 					loadOptionsMethod: 'getAuthors',
 				},
@@ -807,13 +725,8 @@ export const postFields: INodeProperties[] = [
 				type: 'string',
 				displayOptions: {
 					show: {
-						'/contentFormat': [
-							'html',
-						],
+						'/contentFormat': ['html'],
 					},
-				},
-				typeOptions: {
-					alwaysOpenEditWindow: true,
 				},
 				default: '',
 			},
@@ -823,13 +736,24 @@ export const postFields: INodeProperties[] = [
 				type: 'json',
 				displayOptions: {
 					show: {
-						'/contentFormat': [
-							'mobileDoc',
-						],
+						'/contentFormat': ['mobileDoc'],
 					},
 				},
 				default: '',
-				description: 'Mobiledoc is the raw JSON format that Ghost uses to store post contents. <a href="https://ghost.org/docs/concepts/posts/#document-storage">Info.</a>.',
+				description:
+					'Mobiledoc is the raw JSON format that Ghost uses to store post contents. <a href="https://ghost.org/docs/concepts/posts/#document-storage">Info.</a>.',
+			},
+			{
+				displayName: 'Content (JSON)',
+				name: 'contentJson',
+				type: 'json',
+				displayOptions: {
+					show: {
+						'/contentFormat': ['lexical'],
+					},
+				},
+				default: '',
+				description: 'Lexical is the JSON format returned by the Ghost Default editor',
 			},
 			{
 				displayName: 'Featured',
@@ -904,7 +828,8 @@ export const postFields: INodeProperties[] = [
 				displayName: 'Tag Names or IDs',
 				name: 'tags',
 				type: 'multiOptions',
-				description: 'Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
+				description:
+					'Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
 				typeOptions: {
 					loadOptionsMethod: 'getTags',
 				},
@@ -915,7 +840,7 @@ export const postFields: INodeProperties[] = [
 				name: 'title',
 				type: 'string',
 				default: '',
-				description: 'Post\'s title',
+				description: "Post's title",
 			},
 			{
 				displayName: 'Twitter Description',

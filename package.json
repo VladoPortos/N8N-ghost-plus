@@ -1,6 +1,6 @@
 {
-  "name": "@vladoportos/n8n-nodes-ghostv2",
-  "version": "0.1.30",
+  "name": "@vladoportos/n8n-nodes-ghostplus",
+  "version": "0.1.56",
   "description": "Enhanced Ghost CMS node with V2 API support for n8n",
   "license": "MIT",
   "homepage": "https://github.com/VladoPortos/n8n-nodes-ghostv2",
@@ -21,8 +21,8 @@
   "n8n": {
     "n8nNodesApiVersion": 1,
     "credentials": [
-      "dist/credentials/GhostAdminApi.credentials.js",
-      "dist/credentials/GhostContentApi.credentials.js"
+      "dist/credentials/GhostPlusAdminApi.credentials.js",
+      "dist/credentials/GhostPlusContentApi.credentials.js"
     ],
     "nodes": [
       "dist/nodes/GhostPlus/GhostPlus.node.js"

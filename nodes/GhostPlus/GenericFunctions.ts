@@ -23,10 +23,10 @@ export async function ghostApiRequest(this: IHookFunctions | IExecuteFunctions |
 	if (source === 'contentApi') {
 		//https://ghost.org/faq/api-versioning/
 		version = 'v3';
-		credentialType = 'ghostContentApi';
+		credentialType = 'ghostPlusContentApi';
 	} else {
 		version = 'v2';
-		credentialType = 'ghostAdminApi';
+		credentialType = 'ghostPlusAdminApi';
 	}
 
 	credentials = await this.getCredentials(credentialType);

@@ -6,10 +6,10 @@ import type {
 	INodeProperties,
 } from 'n8n-workflow';
 
-export class GhostContentApi implements ICredentialType {
-	name = 'ghostContentApi';
+export class GhostPlusContentApi implements ICredentialType {
+	name = 'ghostPlusContentApi';
 
-	displayName = 'Ghost Content API';
+	displayName = 'Ghost Plus Content API';
 
 	documentationUrl = 'https://github.com/VladoPortos/N8N-ghost-v2';
 

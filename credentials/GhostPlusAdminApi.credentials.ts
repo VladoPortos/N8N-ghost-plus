@@ -1,0 +1,60 @@
+import jwt from 'jsonwebtoken';
+import type {
+	ICredentialDataDecryptedObject,
+	ICredentialTestRequest,
+	ICredentialType,
+	IHttpRequestOptions,
+	INodeProperties,
+} from 'n8n-workflow';
+
+export class GhostPlusAdminApi implements ICredentialType {
+	name = 'ghostPlusAdminApi';
+
+	displayName = 'Ghost Plus Admin API';
+
+	documentationUrl = 'https://github.com/VladoPortos/N8N-ghost-v2';
+
+	properties: INodeProperties[] = [
+		{
+			displayName: 'URL',
+			name: 'url',
+			type: 'string',
+			default: '',
+			placeholder: 'http://localhost:3001',
+		},
+		{
+			displayName: 'API Key',
+			name: 'apiKey',
+			type: 'string',
+			typeOptions: { password: true },
+			default: '',
+		},
+	];
+
+	async authenticate(
+		credentials: ICredentialDataDecryptedObject,
+		requestOptions: IHttpRequestOptions,
+	): Promise<IHttpRequestOptions> {
+		const [id, secret] = (credentials.apiKey as string).split(':');
+		const token = jwt.sign({}, Buffer.from(secret, 'hex'), {
+			keyid: id,
+			algorithm: 'HS256',
+			expiresIn: '5m',
+			audience: '/v2/admin/',
+		});
+
+		requestOptions.headers = {
+			...requestOptions.headers,
+			Authorization: `Ghost ${token}`,
+		};
+		return requestOptions;
+	}
+
+	test: ICredentialTestRequest = {
+		request: {
+			baseURL: '={{$credentials.url}}',
+			url: '/ghost/api/v2/admin/posts/',
+			method: 'GET',
+		},
+	};
+}
