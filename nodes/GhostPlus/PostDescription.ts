@@ -281,7 +281,7 @@ export const postFields: INodeProperties[] = [
 				name: 'featured',
 				type: 'boolean',
 				default: false,
-				description: 'Makes the post a featured post',
+				description: 'Whether to make the post a featured post',
 			},
 			{
 				displayName: 'Meta Description',
@@ -903,6 +903,7 @@ export const postFields: INodeProperties[] = [
 				name: 'featured',
 				type: 'boolean',
 				default: false,
+				description: 'Whether to make the post a featured post',
 			},
 			{
 				displayName: 'Meta Description',
