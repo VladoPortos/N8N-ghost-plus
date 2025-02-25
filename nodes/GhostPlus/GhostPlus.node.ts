@@ -31,7 +31,12 @@ export class GhostPlus implements INodeType {
 		},
 		inputs: ['main'] as string[],
 		outputs: ['main'] as string[],
-		usableAsTool: true,
+		credentials: [
+			{
+				name: 'ghostAdminApi',
+				required: true,
+			},
+		],
 		codex: {
 			categories: ['Content Management', 'Blogging'],
 			alias: ['ghost-cms', 'blog', 'content'],
@@ -39,12 +44,6 @@ export class GhostPlus implements INodeType {
 				'Content Management': ['Blog Posts', 'Content Creation'],
 			},
 		},
-		credentials: [
-			{
-				name: 'ghostAdminApi',
-				required: true,
-			},
-		],
 		properties: [
 			{
 				displayName: 'Resource',
@@ -198,7 +197,7 @@ export class GhostPlus implements INodeType {
 
 							const additionalFields = this.getNodeParameter('additionalFields', i) as IDataObject;
 
-							const postData = {
+							const postData: IDataObject = {
 								title,
 								html: content,
 								...additionalFields,
