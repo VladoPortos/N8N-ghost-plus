@@ -57,7 +57,6 @@ export class GhostPlus implements INodeType {
 					},
 				],
 				default: 'post',
-				description: 'Resource to consume',
 				hint: 'Select the Ghost CMS resource to interact with',
 			},
 			{
@@ -86,10 +85,10 @@ export class GhostPlus implements INodeType {
 						action: 'Get a blog post',
 					},
 					{
-						name: 'Get All',
+						name: 'Get Many',
 						value: 'getAll',
-						description: 'Get all blog posts',
-						action: 'Get all blog posts',
+						description: 'Get many blog posts',
+						action: 'Get many blog posts',
 					},
 					{
 						name: 'Update',
