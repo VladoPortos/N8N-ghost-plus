@@ -10,11 +10,6 @@ import {
 	ghostApiRequest,
 } from './GenericFunctions';
 
-import {
-	postFields,
-	postOperations,
-} from './PostDescription';
-
 import { IDataObject } from 'n8n-workflow';
 
 export class GhostPlus implements INodeType {
@@ -142,8 +137,101 @@ export class GhostPlus implements INodeType {
 				description: 'Content of the blog post in HTML format',
 				hint: 'Can be provided directly or via AI agent input. Supports HTML formatting.',
 			},
-			...postOperations,
-			...postFields,
+			{
+				displayName: 'Additional Fields',
+				name: 'additionalFields',
+				type: 'collection',
+				placeholder: 'Add Field',
+				default: {},
+				displayOptions: {
+					show: {
+						operation: [
+							'create',
+							'update',
+						],
+						resource: [
+							'post',
+						],
+					},
+				},
+				options: [
+					{
+						displayName: 'Authors',
+						name: 'authors',
+						type: 'string',
+						default: '',
+						description: 'Author IDs of the post',
+					},
+					{
+						displayName: 'Canonical URL',
+						name: 'canonical_url',
+						type: 'string',
+						default: '',
+						description: 'Canonical URL for the post',
+					},
+					{
+						displayName: 'Featured',
+						name: 'featured',
+						type: 'boolean',
+						default: false,
+						description: 'Whether to feature the post',
+					},
+					{
+						displayName: 'Status',
+						name: 'status',
+						type: 'options',
+						options: [
+							{
+								name: 'Draft',
+								value: 'draft',
+							},
+							{
+								name: 'Published',
+								value: 'published',
+							},
+							{
+								name: 'Scheduled',
+								value: 'scheduled',
+							},
+						],
+						default: 'draft',
+						description: 'Status of the post',
+					},
+					{
+						displayName: 'Tags',
+						name: 'tags',
+						type: 'string',
+						default: '',
+						description: 'Tag IDs of the post',
+					},
+					{
+						displayName: 'Published At',
+						name: 'published_at',
+						type: 'dateTime',
+						default: '',
+						description: 'Published date and time',
+					},
+				],
+			},
+			{
+				displayName: 'Post ID',
+				name: 'postId',
+				type: 'string',
+				default: '',
+				required: true,
+				displayOptions: {
+					show: {
+						operation: [
+							'update',
+							'get',
+						],
+						resource: [
+							'post',
+						],
+					},
+				},
+				description: 'The ID of the post to operate on',
+			},
 		],
 	};
 
