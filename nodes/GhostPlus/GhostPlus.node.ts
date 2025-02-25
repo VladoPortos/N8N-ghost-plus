@@ -177,6 +177,13 @@ export class GhostPlus implements INodeType {
 						description: 'Whether to feature the post',
 					},
 					{
+						displayName: 'Published At',
+						name: 'published_at',
+						type: 'dateTime',
+						default: '',
+						description: 'Published date and time',
+					},
+					{
 						displayName: 'Status',
 						name: 'status',
 						type: 'options',
@@ -203,13 +210,6 @@ export class GhostPlus implements INodeType {
 						type: 'string',
 						default: '',
 						description: 'Tag IDs of the post',
-					},
-					{
-						displayName: 'Published At',
-						name: 'published_at',
-						type: 'dateTime',
-						default: '',
-						description: 'Published date and time',
 					},
 				],
 			},
