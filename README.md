@@ -19,6 +19,10 @@ This node extends the default Ghost CMS integration with additional features:
   - Get Many: Retrieve multiple posts with filtering options
   - Update: Update existing blog posts
   - Delete: Remove posts from your Ghost site
+  - **Feature Image Support**:
+    - `feature_image`: Set a featured image URL for your post
+    - `feature_image_alt`: Add alternative text for the featured image
+    - `feature_image_caption`: Add a caption for the featured image
 
 - **Image Upload** (NEW in 0.1.77):
   - Upload images directly to your Ghost CMS media library
