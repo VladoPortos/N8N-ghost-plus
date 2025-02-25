@@ -74,3 +74,60 @@ export function validateJSON(json: string | undefined): any { // tslint:disable-
 	}
 	return result;
 }
+
+export async function ghostApiImageUpload(
+	this: IExecuteFunctions | ILoadOptionsFunctions,
+	binaryPropertyName: string,
+	i: number,
+	additionalFormData: IDataObject = {},
+): Promise<any> { // tslint:disable-line:no-any
+	
+	const credentials = await this.getCredentials('ghostPlusAdminApi');
+	
+	// ILoadOptionsFunctions doesn't have getInputData
+	if (!(this as any).getInputData) {
+		throw new NodeApiError(this.getNode(), { message: 'Not supported for this node type' } as JsonObject);
+	}
+	
+	// This is a workaround to get the binary data
+	const items = (this as IExecuteFunctions).getInputData();
+	const item = items[i];
+	
+	if (!item.binary || !item.binary[binaryPropertyName]) {
+		throw new NodeApiError(this.getNode(), { message: `No binary data property "${binaryPropertyName}" exists!` } as JsonObject);
+	}
+	
+	const binaryProperty = item.binary[binaryPropertyName];
+	const contentType = binaryProperty.mimeType;
+	const fileName = additionalFormData.fileName as string || binaryProperty.fileName || 'image';
+	const dataBuffer = Buffer.from(binaryProperty.data, 'base64');
+	
+	// Remove fileName from additionalFormData as it's handled separately
+	if (additionalFormData.fileName !== undefined) {
+		delete additionalFormData.fileName;
+	}
+	
+	const formData: IDataObject = {
+		file: {
+			value: dataBuffer,
+			options: {
+				filename: fileName,
+				contentType,
+			},
+		},
+		...additionalFormData,
+	};
+	
+	const options: OptionsWithUri = {
+		method: 'POST',
+		uri: `${credentials.url}/ghost/api/v2/admin/images/upload/`,
+		formData,
+		json: true,
+	};
+	
+	try {
+		return await this.helpers.requestWithAuthentication.call(this, 'ghostPlusAdminApi', options);
+	} catch(error) {
+		throw new NodeApiError(this.getNode(), error as JsonObject);
+	}
+}
