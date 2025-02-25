@@ -174,14 +174,14 @@ export class GhostPlus implements INodeType {
 						name: 'codeinjection_foot',
 						type: 'string',
 						default: '',
-						description: 'The Code Injection Footer allows you to inject code before the closing </body> tag',
+						description: 'The Code Injection Footer allows you to inject code before the closing &lt;/body&gt; tag',
 					},
 					{
 						displayName: 'Code Injection Header',
 						name: 'codeinjection_head',
 						type: 'string',
 						default: '',
-						description: 'The Code Injection Header allows you to inject code before the closing </head> tag',
+						description: 'The Code Injection Header allows you to inject code before the closing &lt;/head&gt; tag',
 					},
 					{
 						displayName: 'Custom Excerpt',
@@ -330,7 +330,7 @@ export class GhostPlus implements INodeType {
 						default: '',
 						description: 'Twitter card title',
 					},
-				],
+				].sort((a, b) => a.displayName.localeCompare(b.displayName)),
 			},
 			{
 				displayName: 'Post ID',
