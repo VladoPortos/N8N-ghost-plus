@@ -1,46 +1,101 @@
-![Banner image](https://user-images.githubusercontent.com/10284570/173569848-c624317f-42b1-45a6-ab09-f0ea3c247648.png)
+# N8N Ghost Plus Node
 
-# n8n-nodes-starter
+Enhanced Ghost CMS integration for n8n with support for Ghost Content API v3 and Admin API v2.
 
-This repo contains example nodes to help you get started building your own custom integrations for [n8n](n8n.io). It includes the node linter and other dependencies.
+<a href='https://ko-fi.com/J3J52ZNN2' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi6.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
-To make your custom node available to the community, you must create it as an npm package, and [submit it to the npm registry](https://docs.npmjs.com/packages-and-modules/contributing-packages-to-the-registry).
+## Features
 
-## Prerequisites
+This node extends the default Ghost CMS integration with additional features:
 
-You need the following installed on your development machine:
+### Content API (v3)
+- **Get Post**: Retrieve a single post by ID or slug
+- **Get Many Posts**: Retrieve multiple posts with filtering options
 
-* [git](https://git-scm.com/downloads)
-* Node.js and pnpm. Minimum version Node 18. You can find instructions on how to install both using nvm (Node Version Manager) for Linux, Mac, and WSL [here](https://github.com/nvm-sh/nvm). For Windows users, refer to Microsoft's guide to [Install NodeJS on Windows](https://docs.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-windows).
-* Install n8n with:
-  ```
-  pnpm install n8n -g
-  ```
-* Recommended: follow n8n's guide to [set up your development environment](https://docs.n8n.io/integrations/creating-nodes/build/node-development-environment/).
+### Admin API (v2)
+- **Post Management**:
+  - Create: Create new blog posts
+  - Get: Retrieve a single post by ID or slug
+  - Get Many: Retrieve multiple posts with filtering options
+  - Update: Update existing blog posts
+  - Delete: Remove posts from your Ghost site
 
-## Using this starter
+- **Image Upload** (NEW in 0.1.77):
+  - Upload images directly to your Ghost CMS media library
+  - Support for different image purposes (general image, profile image, icon)
+  - Custom file name and reference metadata
 
-These are the basic steps for working with the starter. For detailed guidance on creating and publishing nodes, refer to the [documentation](https://docs.n8n.io/integrations/creating-nodes/).
+## Requirements
 
-1. [Generate a new repository](https://github.com/n8n-io/n8n-nodes-starter/generate) from this template repository.
-2. Clone your new repo:
-   ```
-   git clone https://github.com/<your organization>/<your-repo-name>.git
-   ```
-3. Run `pnpm i` to install dependencies.
-4. Open the project in your editor.
-5. Browse the examples in `/nodes` and `/credentials`. Modify the examples, or replace them with your own nodes.
-6. Update the `package.json` to match your details.
-7. Run `pnpm lint` to check for errors or `pnpm lintfix` to automatically fix errors when possible.
-8. Test your node locally. Refer to [Run your node locally](https://docs.n8n.io/integrations/creating-nodes/test/run-node-locally/) for guidance.
-9. Replace this README with documentation for your node. Use the [README_TEMPLATE](README_TEMPLATE.md) to get started.
-10. Update the LICENSE file to use your details.
-11. [Publish](https://docs.npmjs.com/packages-and-modules/contributing-packages-to-the-registry) your package to npm.
+- N8N version 1.0.0 or later
+- Ghost CMS instance with Content API or Admin API credentials
 
-## More information
+## Installation
 
-Refer to our [documentation on creating nodes](https://docs.n8n.io/integrations/creating-nodes/) for detailed information on building your own nodes.
+Install via NPM:
+
+```bash
+npm install @vladoportos/n8n-nodes-ghostplus
+```
+
+For manual installation, copy the contents of the `dist` directory to your n8n custom nodes directory.
+
+## Usage
+
+### Credentials
+
+Two credential types are available:
+
+1. **Ghost Plus Content API**
+   - URL: Your Ghost site URL (e.g., https://your-ghost-site.com)
+   - API Key: Your Content API key
+
+2. **Ghost Plus Admin API**
+   - URL: Your Ghost site URL (e.g., https://your-ghost-site.com)
+   - API Key: Your Admin API key in the format `{id}:{secret}`
+
+### Working with Posts
+
+Select the "Post" resource to work with blog posts. Operations differ based on the selected API source:
+
+#### Content API
+- Get: Retrieve a post by ID or slug
+- Get Many: List multiple posts with filtering options
+
+#### Admin API
+- Create: Create a new blog post with title, content format (HTML or MobileDoc), and content
+- Get: Retrieve a post by ID or slug
+- Get Many: List multiple posts with filtering options
+- Update: Modify an existing post
+- Delete: Remove a post
+
+### Image Upload (Admin API)
+
+Select the "Image" resource and "Upload" operation to add images to your Ghost CMS. Required parameters:
+
+- **Binary Property**: Name of the binary property containing the image data
+- **Additional Fields**:
+  - Purpose: Choose between "Image", "Profile Image" (must be square), or "Icon" (must be square)
+  - File Name: Custom file name for the uploaded image (optional)
+  - Reference: Optional reference identifier for the image (e.g., original file path)
+
+## Example Usage
+
+### Upload an Image and Use in a Post
+
+1. Use a node to fetch or generate an image (HTTP Request, Read Binary File, etc.)
+2. Connect to Ghost Plus node configured with:
+   - Source: Admin API
+   - Resource: Image
+   - Operation: Upload
+   - Binary Property: data (or your binary property name)
+3. Add another Ghost Plus node configured with:
+   - Source: Admin API
+   - Resource: Post
+   - Operation: Create
+   - Title: Your post title
+   - Content: Include the uploaded image URL from the previous node in your HTML content
 
 ## License
 
-[MIT](https://github.com/n8n-io/n8n-nodes-starter/blob/master/LICENSE.md)
+MIT
