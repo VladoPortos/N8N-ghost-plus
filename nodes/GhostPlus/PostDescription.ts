@@ -2,75 +2,7 @@ import {
 	INodeProperties,
 } from 'n8n-workflow';
 
-export const postOperations: INodeProperties[] = [
-	{
-		displayName: 'Operation',
-		name: 'operation',
-		type: 'options',
-		noDataExpression: true,
-		displayOptions: {
-			show: {
-				resource: [
-					'post',
-				],
-			},
-		},
-		options: [
-			{
-				name: 'Create',
-				value: 'create',
-				description: 'Create a new post',
-				action: 'Create a post',
-				displayOptions: {
-					show: {
-						source: [
-							'adminApi',
-						],
-					},
-				},
-			},
-			{
-				name: 'Delete',
-				value: 'delete',
-				description: 'Delete a post',
-				action: 'Delete a post',
-				displayOptions: {
-					show: {
-						source: [
-							'adminApi',
-						],
-					},
-				},
-			},
-			{
-				name: 'Get',
-				value: 'get',
-				description: 'Get a single post by ID or slug',
-				action: 'Get a post',
-			},
-			{
-				name: 'Get Many',
-				value: 'getAll',
-				description: 'Get multiple posts',
-				action: 'Get many posts',
-			},
-			{
-				name: 'Update',
-				value: 'update',
-				description: 'Update a post',
-				action: 'Update a post',
-				displayOptions: {
-					show: {
-						source: [
-							'adminApi',
-						],
-					},
-				},
-			},
-		],
-		default: 'get',
-	},
-];
+export const postOperations: INodeProperties[] = [];
 
 export const postFields: INodeProperties[] = [
 	/* -------------------------------------------------------------------------- */
