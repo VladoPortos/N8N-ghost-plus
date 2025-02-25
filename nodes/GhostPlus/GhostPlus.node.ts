@@ -65,10 +65,9 @@ export class GhostPlus implements INodeType {
 		],
 		properties: [
 			{
-				displayName: 'Source',
+				displayName: 'Credential to connect with',
 				name: 'source',
 				type: 'options',
-				description: 'Pick where your data comes from, Content or Admin API',
 				options: [
 					{
 						name: 'Admin API',
@@ -80,6 +79,7 @@ export class GhostPlus implements INodeType {
 					},
 				],
 				default: 'contentApi',
+				description: 'Choose between Admin API and Content API',
 			},
 			{
 				displayName: 'Resource',
