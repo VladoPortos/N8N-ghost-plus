@@ -241,12 +241,6 @@ export const postFields: INodeProperties[] = [
 				description: 'The Code Injection allows you inject a small snippet into your Ghost site',
 			},
 			{
-				displayName: 'Featured',
-				name: 'featured',
-				type: 'boolean',
-				default: false,
-			},
-			{
 				displayName: 'Feature Image',
 				name: 'feature_image',
 				type: 'string',
@@ -266,6 +260,12 @@ export const postFields: INodeProperties[] = [
 				type: 'string',
 				default: '',
 				description: 'Caption for the feature image',
+			},
+			{
+				displayName: 'Featured',
+				name: 'featured',
+				type: 'boolean',
+				default: false,
 			},
 			{
 				displayName: 'Meta Description',
@@ -291,7 +291,6 @@ export const postFields: INodeProperties[] = [
 				type: 'string',
 				default: '',
 				description: 'URL of the image',
-
 			},
 			{
 				displayName: 'Open Graph Title',
@@ -332,7 +331,7 @@ export const postFields: INodeProperties[] = [
 				default: 'draft',
 			},
 			{
-				displayName: 'Tag Names or IDs',
+				displayName: 'Tags',
 				name: 'tags',
 				type: 'multiOptions',
 				description: 'Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
@@ -853,12 +852,6 @@ export const postFields: INodeProperties[] = [
 				description: 'Mobiledoc is the raw JSON format that Ghost uses to store post contents. <a href="https://ghost.org/docs/concepts/posts/#document-storage">Info.</a>.',
 			},
 			{
-				displayName: 'Featured',
-				name: 'featured',
-				type: 'boolean',
-				default: false,
-			},
-			{
 				displayName: 'Feature Image',
 				name: 'feature_image',
 				type: 'string',
@@ -880,6 +873,13 @@ export const postFields: INodeProperties[] = [
 				description: 'Caption for the feature image',
 			},
 			{
+				displayName: 'Feature Image Height',
+				name: 'feature_image_height',
+				type: 'number',
+				default: '',
+				description: 'Height of the feature image',
+			},
+			{
 				displayName: 'Feature Image Width',
 				name: 'feature_image_width',
 				type: 'number',
@@ -887,11 +887,10 @@ export const postFields: INodeProperties[] = [
 				description: 'Width of the feature image',
 			},
 			{
-				displayName: 'Feature Image Height',
-				name: 'feature_image_height',
-				type: 'number',
-				default: '',
-				description: 'Height of the feature image',
+				displayName: 'Featured',
+				name: 'featured',
+				type: 'boolean',
+				default: false,
 			},
 			{
 				displayName: 'Meta Description',
