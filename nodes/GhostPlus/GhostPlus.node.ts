@@ -27,18 +27,26 @@ import moment from 'moment-timezone';
 
 export class GhostPlus implements INodeType {
 	description: INodeTypeDescription = {
-		displayName: 'Ghost Plus',
+		displayName: 'GhostPlus',
 		name: 'ghostPlus',
 		icon: 'file:ghostv2.svg',
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-		description: 'Consume Ghost API V2 with enhanced features',
+		description: 'Enhanced Ghost CMS integration with V2 API support',
 		defaults: {
-			name: 'Ghost Plus',
+			name: 'GhostPlus',
 		},
 		inputs: ['main'] as string[],
 		outputs: ['main'] as string[],
+		usableAsTool: true,
+		codex: {
+			categories: ['Content Management', 'Blogging'],
+			alias: ['ghost-cms', 'blog', 'content'],
+			subcategories: {
+				'Content Management': ['Blog Posts', 'Content Creation'],
+			},
+		},
 		credentials: [
 			{
 				name: 'ghostAdminApi',
@@ -85,14 +93,99 @@ export class GhostPlus implements INodeType {
 				displayName: 'Resource',
 				name: 'resource',
 				type: 'options',
+				noDataExpression: true,
 				options: [
 					{
 						name: 'Post',
 						value: 'post',
 					},
 				],
-				noDataExpression: true,
 				default: 'post',
+				description: 'Resource to consume',
+				hint: 'Select the Ghost CMS resource to interact with',
+			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: [
+							'post',
+						],
+					},
+				},
+				options: [
+					{
+						name: 'Create',
+						value: 'create',
+						description: 'Create a new blog post',
+						action: 'Create a new blog post',
+					},
+					{
+						name: 'Get',
+						value: 'get',
+						description: 'Get a blog post',
+						action: 'Get a blog post',
+					},
+					{
+						name: 'Get All',
+						value: 'getAll',
+						description: 'Get all blog posts',
+						action: 'Get all blog posts',
+					},
+					{
+						name: 'Update',
+						value: 'update',
+						description: 'Update a blog post',
+						action: 'Update a blog post',
+					},
+				],
+				default: 'create',
+			},
+			{
+				displayName: 'Title',
+				name: 'title',
+				type: 'string',
+				default: '',
+				required: true,
+				displayOptions: {
+					show: {
+						operation: [
+							'create',
+							'update',
+						],
+						resource: [
+							'post',
+						],
+					},
+				},
+				description: 'Title of the blog post',
+				hint: 'Can be provided directly or via AI agent input',
+			},
+			{
+				displayName: 'Content',
+				name: 'content',
+				type: 'string',
+				typeOptions: {
+					rows: 5,
+				},
+				default: '',
+				required: true,
+				displayOptions: {
+					show: {
+						operation: [
+							'create',
+							'update',
+						],
+						resource: [
+							'post',
+						],
+					},
+				},
+				description: 'Content of the blog post in HTML format',
+				hint: 'Can be provided directly or via AI agent input. Supports HTML formatting.',
 			},
 			...postOperations,
 			...postFields,
@@ -147,214 +240,146 @@ export class GhostPlus implements INodeType {
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const items = this.getInputData();
-		const returnData: IDataObject[] = [];
-		const length = items.length;
-		const timezone = this.getTimezone();
-		const qs: IDataObject = {};
-		let responseData;
+		const returnData: INodeExecutionData[] = [];
 		const resource = this.getNodeParameter('resource', 0) as string;
 		const operation = this.getNodeParameter('operation', 0) as string;
-		const source = this.getNodeParameter('source', 0) as string;
-		for (let i = 0; i < length; i++) {
-			try {
-				if (source === 'contentApi') {
+
+		try {
+			const credentials = await this.getCredentials('ghostAdminApi');
+			if (!credentials) {
+				throw new NodeOperationError(this.getNode(), 'No credentials got returned!');
+			}
+
+			for (let i = 0; i < items.length; i++) {
+				const item = items[i].json as IDataObject;
+
+				try {
 					if (resource === 'post') {
-						if (operation === 'get') {
+						if (operation === 'create' || operation === 'update') {
+							// Enhanced input handling for AI compatibility
+							let title = '';
+							let content = '';
+							
+							if (item) {
+								// Try various AI input fields for title
+								if (typeof item.title === 'string') {
+									title = item.title;
+								} else if (typeof item.name === 'string') {
+									title = item.name;
+								} else {
+									title = this.getNodeParameter('title', i) as string;
+								}
 
-							const by = this.getNodeParameter('by', i) as string;
-
-							const identifier = this.getNodeParameter('identifier', i) as string;
-
-							const options = this.getNodeParameter('options', i) as IDataObject;
-
-							Object.assign(qs, options);
-
-							let endpoint;
-
-							if (by === 'slug') {
-								endpoint = `/content/posts/slug/${identifier}`;
+								// Try various AI input fields for content
+								if (typeof item.content === 'string') {
+									content = item.content;
+								} else if (typeof item.text === 'string') {
+									content = item.text;
+								} else if (typeof item.html === 'string') {
+									content = item.html;
+								} else {
+									content = this.getNodeParameter('content', i) as string;
+								}
 							} else {
-								endpoint = `/content/posts/${identifier}`;
+								title = this.getNodeParameter('title', i) as string;
+								content = this.getNodeParameter('content', i) as string;
 							}
-							responseData = await ghostApiRequest.call(this, 'GET', endpoint, {}, qs);
-
-							returnData.push.apply(returnData, responseData.posts);
-
-						}
-
-						if (operation === 'getAll') {
-
-							const returnAll = this.getNodeParameter('returnAll', 0) as boolean;
-
-							const options = this.getNodeParameter('options', i) as IDataObject;
-
-							Object.assign(qs, options);
-
-							if (returnAll) {
-								responseData = await ghostApiRequestAllItems.call(this, 'posts', 'GET', '/content/posts', {} ,qs);
-							} else {
-								qs.limit = this.getNodeParameter('limit', 0);
-								responseData = await ghostApiRequest.call(this, 'GET', '/content/posts', {}, qs);
-								responseData = responseData.posts;
-							}
-
-							returnData.push.apply(returnData, responseData);
-
-						}
-					}
-				}
-
-				if (source === 'adminApi') {
-					if (resource === 'post') {
-						if (operation === 'create') {
-
-							const title = this.getNodeParameter('title', i) as string;
-
-							const contentFormat = this.getNodeParameter('contentFormat', i) as string;
-
-							const content = this.getNodeParameter('content', i) as string;
 
 							const additionalFields = this.getNodeParameter('additionalFields', i) as IDataObject;
 
-							const post: IDataObject = {
-								title,
+							const body: IDataObject = {
+								posts: [
+									{
+										title,
+										html: content,
+										...additionalFields,
+									},
+								],
 							};
 
-							if (contentFormat === 'html') {
-								post.html = content;
-								qs.source = 'html';
+							let response;
+							if (operation === 'create') {
+								response = await ghostApiRequest.call(this, 'POST', '/posts/', body);
 							} else {
-								const mobileDoc = validateJSON(content);
-								if (mobileDoc === undefined) {
-									throw new NodeOperationError(this.getNode(), 'Content must be a valid JSON');
-								}
-								post.mobiledoc = content;
+								const postId = this.getNodeParameter('postId', i) as string;
+								body.posts[0].id = postId;
+								response = await ghostApiRequest.call(this, 'PUT', `/posts/${postId}/`, body);
 							}
 
-							delete post.content;
-
-							Object.assign(post, additionalFields);
-
-							if (post.published_at) {
-								post.published_at = moment.tz(post.published_at, timezone).utc().format();
-							}
-
-							if (post.status === 'scheduled' && post.published_at === undefined) {
-								throw new NodeOperationError(this.getNode(), 'Published at must be define when status is scheduled');
-							}
-
-							responseData = await ghostApiRequest.call(this, 'POST', '/admin/posts', { posts: [post] }, qs);
-
-							returnData.push.apply(returnData, responseData.posts);
-
-						}
-
-						if (operation === 'delete') {
-
+							// Format output for AI compatibility
+							returnData.push({
+								json: {
+									success: true,
+									operation,
+									post: response.posts[0],
+									metadata: {
+										timestamp: new Date().toISOString(),
+										operation,
+										resource,
+									},
+								},
+							});
+						} else if (operation === 'get') {
 							const postId = this.getNodeParameter('postId', i) as string;
+							const response = await ghostApiRequest.call(this, 'GET', `/posts/${postId}/`);
 
-							responseData = await ghostApiRequest.call(this, 'DELETE', `/admin/posts/${postId}`);
+							returnData.push({
+								json: {
+									success: true,
+									operation,
+									post: response.posts[0],
+									metadata: {
+										timestamp: new Date().toISOString(),
+										operation,
+										resource,
+									},
+								},
+							});
+						} else if (operation === 'getAll') {
+							const response = await ghostApiRequest.call(this, 'GET', '/posts/');
 
-							returnData.push({ success: true });
-
-						}
-
-						if (operation === 'get') {
-
-							const by = this.getNodeParameter('by', i) as string;
-
-							const identifier = this.getNodeParameter('identifier', i) as string;
-
-							const options = this.getNodeParameter('options', i) as IDataObject;
-
-							Object.assign(qs, options);
-
-							let endpoint;
-
-							if (by === 'slug') {
-								endpoint = `/admin/posts/slug/${identifier}`;
-							} else {
-								endpoint = `/admin/posts/${identifier}`;
-							}
-							responseData = await ghostApiRequest.call(this, 'GET', endpoint, {}, qs);
-
-							returnData.push.apply(returnData, responseData.posts);
-
-						}
-
-						if (operation === 'getAll') {
-
-
-							const returnAll = this.getNodeParameter('returnAll', 0) as boolean;
-
-							const options = this.getNodeParameter('options', i) as IDataObject;
-
-							Object.assign(qs, options);
-
-							if (returnAll) {
-								responseData = await ghostApiRequestAllItems.call(this, 'posts', 'GET', '/admin/posts', {} ,qs);
-							} else {
-								qs.limit = this.getNodeParameter('limit', 0);
-								responseData = await ghostApiRequest.call(this, 'GET', '/admin/posts', {}, qs);
-								responseData = responseData.posts;
-							}
-
-							returnData.push.apply(returnData, responseData);
-
-						}
-
-						if (operation === 'update') {
-
-							const postId = this.getNodeParameter('postId', i) as string;
-
-							const contentFormat = this.getNodeParameter('contentFormat', i) as string;
-
-							const updateFields = this.getNodeParameter('updateFields', i) as IDataObject;
-
-							const post: IDataObject = {};
-
-							if (contentFormat === 'html') {
-								post.html = updateFields.content || '';
-								qs.source = 'html';
-								delete updateFields.content;
-							} else {
-								const mobileDoc = validateJSON(updateFields.contentJson as string || undefined);
-								if (mobileDoc === undefined) {
-									throw new NodeOperationError(this.getNode(), 'Content must be a valid JSON');
-								}
-								post.mobiledoc = updateFields.contentJson;
-								delete updateFields.contentJson;
-							}
-
-							Object.assign(post, updateFields);
-
-							const { posts } = await ghostApiRequest.call(this, 'GET', `/admin/posts/${postId}`, {}, { fields: 'id, updated_at' });
-
-							if (post.published_at) {
-								post.published_at = moment.tz(post.published_at, timezone).utc().format();
-							}
-
-							if (post.status === 'scheduled' && post.published_at === undefined) {
-								throw new NodeOperationError(this.getNode(), 'Published at must be define when status is scheduled');
-							}
-
-							post.updated_at = posts[0].updated_at;
-
-							responseData = await ghostApiRequest.call(this, 'PUT', `/admin/posts/${postId}`, { posts: [post] }, qs);
-
-							returnData.push.apply(returnData, responseData.posts);
-
+							returnData.push({
+								json: {
+									success: true,
+									operation,
+									posts: response.posts,
+									metadata: {
+										timestamp: new Date().toISOString(),
+										operation,
+										resource,
+										total: response.posts.length,
+									},
+								},
+							});
 						}
 					}
+				} catch (error) {
+					if (this.continueOnFail()) {
+						returnData.push({
+							json: {
+								success: false,
+								error: error.message,
+								operation,
+								resource,
+								metadata: {
+									timestamp: new Date().toISOString(),
+									operation,
+									resource,
+								},
+							},
+						});
+						continue;
+					}
+					throw error;
 				}
-			} catch (error) {
-				if (this.continueOnFail()) {
-					returnData.push({ error: error.message });
-					continue;
-				}
-				throw error;
 			}
+
+			return [returnData];
+		} catch (error) {
+			if (this.continueOnFail()) {
+				return [returnData];
+			}
+			throw error;
 		}
-		return [this.helpers.returnJsonArray(returnData)];
 	}
 }
