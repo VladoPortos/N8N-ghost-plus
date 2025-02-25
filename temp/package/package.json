@@ -1,0 +1,93 @@
+{
+  "name": "@vladoportos/n8n-nodes-ghostplus",
+  "version": "0.1.68",
+  "description": "Enhanced Ghost CMS node with V2 API support for n8n",
+  "license": "MIT",
+  "homepage": "https://github.com/VladoPortos/n8n-nodes-ghostv2",
+  "keywords": [
+    "n8n-community-node-package"
+  ],
+  "author": {
+    "name": "VladoPortos",
+    "email": "vladoportos@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VladoPortos/n8n-nodes-ghostv2.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/GhostPlusAdminApi.credentials.js",
+      "dist/credentials/GhostPlusContentApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/GhostPlus/GhostPlus.node.js"
+    ]
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.6",
+    "@types/jsonwebtoken": "^8.5.2",
+    "@types/lodash": "^4.14.178",
+    "@types/node": "^18.11.18",
+    "@types/request": "^2.48.8",
+    "@types/request-promise-native": "~1.0.15",
+    "@types/moment-timezone": "^0.5.12",
+    "@typescript-eslint/parser": "^7.15.0",
+    "@types/jest": "^27.4.0",
+    "jest": "^27.4.7",
+    "ts-jest": "^27.1.3",
+    "gulp": "^4.0.0",
+    "n8n-core": "1.5.0",
+    "typescript": "~5.3.3",
+    "tsc-alias": "^1.8.8",
+    "n8n-workflow": "1.5.0",
+    "tslint": "^6.1.3",
+    "eslint": "^8.56.0",
+    "eslint-plugin-n8n-nodes-base": "^1.16.1",
+    "prettier": "^3.3.2"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  },
+  "dependencies": {
+    "@tryghost/admin-api": "^1.13.4",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
+    "lodash.get": "^4.4.2",
+    "lodash.set": "^4.3.2",
+    "lodash.unset": "^4.5.2",
+    "moment": "~2.29.2",
+    "moment-timezone": "^0.5.28",
+    "request": "^2.88.2",
+    "request-promise-native": "^1.0.9"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testURL": "http://localhost/",
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "testPathIgnorePatterns": [
+      "/dist/",
+      "/node_modules/"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json"
+    ]
+  },
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "build": "tsc && gulp build:icons",
+    "dev": "tsc --watch",
+    "format": "prettier nodes credentials --write",
+    "lint": "eslint nodes credentials package.json",
+    "lintfix": "eslint nodes credentials package.json --fix"
+  }
+}
