@@ -2,7 +2,91 @@ import {
 	INodeProperties,
 } from 'n8n-workflow';
 
-export const postOperations: INodeProperties[] = [];
+export const postOperations: INodeProperties[] = [
+	{
+		displayName: 'Operation',
+		name: 'operation',
+		type: 'options',
+		noDataExpression: true,
+		displayOptions: {
+			show: {
+				resource: [
+					'post',
+				],
+			},
+		},
+		options: [
+			{
+				name: 'Create',
+				value: 'create',
+				description: 'Create a new post',
+				action: 'Create a post',
+				displayOptions: {
+					show: {
+						source: [
+							'adminApi',
+						],
+					},
+				},
+			},
+			{
+				name: 'Delete',
+				value: 'delete',
+				description: 'Delete a post',
+				action: 'Delete a post',
+				displayOptions: {
+					show: {
+						source: [
+							'adminApi',
+						],
+					},
+				},
+			},
+			{
+				name: 'Get',
+				value: 'get',
+				description: 'Get a single post by ID or slug',
+				action: 'Get a post',
+				displayOptions: {
+					show: {
+						source: [
+							'contentApi',
+							'adminApi',
+						],
+					},
+				},
+			},
+			{
+				name: 'Get Many',
+				value: 'getAll',
+				description: 'Get multiple posts',
+				action: 'Get many posts',
+				displayOptions: {
+					show: {
+						source: [
+							'contentApi',
+							'adminApi',
+						],
+					},
+				},
+			},
+			{
+				name: 'Update',
+				value: 'update',
+				description: 'Update a post',
+				action: 'Update a post',
+				displayOptions: {
+					show: {
+						source: [
+							'adminApi',
+						],
+					},
+				},
+			},
+		],
+		default: 'get',
+	},
+];
 
 export const postFields: INodeProperties[] = [
 	/* -------------------------------------------------------------------------- */
@@ -16,14 +100,14 @@ export const postFields: INodeProperties[] = [
 		required: true,
 		displayOptions: {
 			show: {
+				source: [
+					'adminApi',
+				],
 				resource: [
 					'post',
 				],
 				operation: [
 					'create',
-				],
-				source: [
-					'adminApi',
 				],
 			},
 		},
@@ -34,14 +118,14 @@ export const postFields: INodeProperties[] = [
 		type: 'options',
 		displayOptions: {
 			show: {
+				source: [
+					'adminApi',
+				],
 				resource: [
 					'post',
 				],
 				operation: [
 					'create',
-				],
-				source: [
-					'adminApi',
 				],
 			},
 		},
@@ -66,14 +150,14 @@ export const postFields: INodeProperties[] = [
 		},
 		displayOptions: {
 			show: {
+				source: [
+					'adminApi',
+				],
 				resource: [
 					'post',
 				],
 				operation: [
 					'create',
-				],
-				source: [
-					'adminApi',
 				],
 				contentFormat: [
 					'html',
@@ -88,14 +172,14 @@ export const postFields: INodeProperties[] = [
 		type: 'json',
 		displayOptions: {
 			show: {
+				source: [
+					'adminApi',
+				],
 				resource: [
 					'post',
 				],
 				operation: [
 					'create',
-				],
-				source: [
-					'adminApi',
 				],
 				contentFormat: [
 					'mobileDoc',
@@ -113,14 +197,14 @@ export const postFields: INodeProperties[] = [
 		default: {},
 		displayOptions: {
 			show: {
+				source: [
+					'adminApi',
+				],
 				resource: [
 					'post',
 				],
 				operation: [
 					'create',
-				],
-				source: [
-					'adminApi',
 				],
 			},
 		},
@@ -281,14 +365,14 @@ export const postFields: INodeProperties[] = [
 		required: true,
 		displayOptions: {
 			show: {
+				source: [
+					'adminApi',
+				],
 				resource: [
 					'post',
 				],
 				operation: [
 					'delete',
-				],
-				source: [
-					'adminApi',
 				],
 			},
 		},
@@ -303,16 +387,6 @@ export const postFields: INodeProperties[] = [
 		type: 'options',
 		default: 'id',
 		required: true,
-		displayOptions: {
-			show: {
-				resource: [
-					'post',
-				],
-				operation: [
-					'get',
-				],
-			},
-		},
 		options: [
 			{
 				name: 'ID',
@@ -323,6 +397,20 @@ export const postFields: INodeProperties[] = [
 				value: 'slug',
 			},
 		],
+		displayOptions: {
+			show: {
+				source: [
+					'contentApi',
+					'adminApi',
+				],
+				resource: [
+					'post',
+				],
+				operation: [
+					'get',
+				],
+			},
+		},
 	},
 	{
 		displayName: 'Identifier',
@@ -332,6 +420,10 @@ export const postFields: INodeProperties[] = [
 		required: true,
 		displayOptions: {
 			show: {
+				source: [
+					'contentApi',
+					'adminApi',
+				],
 				resource: [
 					'post',
 				],
@@ -349,14 +441,14 @@ export const postFields: INodeProperties[] = [
 		default: {},
 		displayOptions: {
 			show: {
+				source: [
+					'adminApi',
+				],
 				resource: [
 					'post',
 				],
 				operation: [
 					'get',
-				],
-				source: [
-					'adminApi',
 				],
 			},
 		},
@@ -395,14 +487,14 @@ export const postFields: INodeProperties[] = [
 		default: {},
 		displayOptions: {
 			show: {
+				source: [
+					'contentApi',
+				],
 				resource: [
 					'post',
 				],
 				operation: [
 					'get',
-				],
-				source: [
-					'contentApi',
 				],
 			},
 		},
@@ -479,14 +571,14 @@ export const postFields: INodeProperties[] = [
 		default: {},
 		displayOptions: {
 			show: {
+				source: [
+					'contentApi',
+				],
 				resource: [
 					'post',
 				],
 				operation: [
 					'getAll',
-				],
-				source: [
-					'contentApi',
 				],
 			},
 		},
@@ -541,14 +633,14 @@ export const postFields: INodeProperties[] = [
 		default: {},
 		displayOptions: {
 			show: {
+				source: [
+					'adminApi',
+				],
 				resource: [
 					'post',
 				],
 				operation: [
 					'getAll',
-				],
-				source: [
-					'adminApi',
 				],
 			},
 		},
@@ -605,14 +697,14 @@ export const postFields: INodeProperties[] = [
 		type: 'string',
 		displayOptions: {
 			show: {
+				source: [
+					'adminApi',
+				],
 				resource: [
 					'post',
 				],
 				operation: [
 					'update',
-				],
-				source: [
-					'adminApi',
 				],
 			},
 		},
@@ -624,14 +716,14 @@ export const postFields: INodeProperties[] = [
 		type: 'options',
 		displayOptions: {
 			show: {
+				source: [
+					'adminApi',
+				],
 				resource: [
 					'post',
 				],
 				operation: [
 					'update',
-				],
-				source: [
-					'adminApi',
 				],
 			},
 		},
@@ -655,14 +747,14 @@ export const postFields: INodeProperties[] = [
 		default: {},
 		displayOptions: {
 			show: {
+				source: [
+					'adminApi',
+				],
 				resource: [
 					'post',
 				],
 				operation: [
 					'update',
-				],
-				source: [
-					'adminApi',
 				],
 			},
 		},
