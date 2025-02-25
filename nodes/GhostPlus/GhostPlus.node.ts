@@ -1,12 +1,6 @@
 import {
 	IExecuteFunctions,
-} from 'n8n-workflow';
-
-import {
-	IDataObject,
-	ILoadOptionsFunctions,
 	INodeExecutionData,
-	INodePropertyOptions,
 	INodeType,
 	INodeTypeDescription,
 	NodeOperationError,
@@ -14,8 +8,6 @@ import {
 
 import {
 	ghostApiRequest,
-	ghostApiRequestAllItems,
-	validateJSON,
 } from './GenericFunctions';
 
 import {
@@ -23,7 +15,7 @@ import {
 	postOperations,
 } from './PostDescription';
 
-import moment from 'moment-timezone';
+import { IDataObject } from 'n8n-workflow';
 
 export class GhostPlus implements INodeType {
 	description: INodeTypeDescription = {
@@ -51,44 +43,9 @@ export class GhostPlus implements INodeType {
 			{
 				name: 'ghostAdminApi',
 				required: true,
-				displayOptions: {
-					show: {
-						source: [
-							'adminApi',
-						],
-					},
-				},
-			},
-			{
-				name: 'ghostContentApi',
-				required: true,
-				displayOptions: {
-					show: {
-						source: [
-							'contentApi',
-						],
-					},
-				},
 			},
 		],
 		properties: [
-			{
-				displayName: 'Source',
-				name: 'source',
-				type: 'options',
-				description: 'Pick where your data comes from, Content or Admin API',
-				options: [
-					{
-						name: 'Admin API',
-						value: 'adminApi',
-					},
-					{
-						name: 'Content API',
-						value: 'contentApi',
-					},
-				],
-				default: 'contentApi',
-			},
 			{
 				displayName: 'Resource',
 				name: 'resource',
@@ -192,52 +149,6 @@ export class GhostPlus implements INodeType {
 		],
 	};
 
-
-	methods = {
-		loadOptions: {
-			// Get all the authors to display them to user so that he can
-			// select them easily
-			async getAuthors(
-				this: ILoadOptionsFunctions,
-			): Promise<INodePropertyOptions[]> {
-				const returnData: INodePropertyOptions[] = [];
-				const users = await ghostApiRequestAllItems.call(
-					this,
-					'users',
-					'GET',
-					`/admin/users`,
-				);
-				for (const user of users) {
-					returnData.push({
-						name: user.name,
-						value: user.id,
-					});
-				}
-				return returnData;
-			},
-			// Get all the tags to display them to user so that he can
-			// select them easily
-			async getTags(
-				this: ILoadOptionsFunctions,
-			): Promise<INodePropertyOptions[]> {
-				const returnData: INodePropertyOptions[] = [];
-				const tags = await ghostApiRequestAllItems.call(
-					this,
-					'tags',
-					'GET',
-					`/admin/tags`,
-				);
-				for (const tag of tags) {
-					returnData.push({
-						name: tag.name,
-						value: tag.name,
-					});
-				}
-				return returnData;
-			},
-		},
-	};
-
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const items = this.getInputData();
 		const returnData: INodeExecutionData[] = [];
@@ -287,23 +198,19 @@ export class GhostPlus implements INodeType {
 
 							const additionalFields = this.getNodeParameter('additionalFields', i) as IDataObject;
 
-							const body: IDataObject = {
-								posts: [
-									{
-										title,
-										html: content,
-										...additionalFields,
-									},
-								],
+							const postData = {
+								title,
+								html: content,
+								...additionalFields,
 							};
 
 							let response;
 							if (operation === 'create') {
-								response = await ghostApiRequest.call(this, 'POST', '/posts/', body);
+								response = await ghostApiRequest.call(this, 'POST', '/posts/', { posts: [postData] });
 							} else {
 								const postId = this.getNodeParameter('postId', i) as string;
-								body.posts[0].id = postId;
-								response = await ghostApiRequest.call(this, 'PUT', `/posts/${postId}/`, body);
+								postData.id = postId;
+								response = await ghostApiRequest.call(this, 'PUT', `/posts/${postId}/`, { posts: [postData] });
 							}
 
 							// Format output for AI compatibility
