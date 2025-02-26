@@ -17,6 +17,7 @@ import {
 	ghostApiRequestAllItems,
 	validateJSON,
 	ghostApiImageUpload,
+	ghostApiMediaUpload,
 } from './GenericFunctions';
 
 import {
@@ -28,6 +29,11 @@ import {
 	imageFields,
 	imageOperations,
 } from './ImageDescription';
+
+import {
+	mediaFields,
+	mediaOperations,
+} from './MediaDescription';
 
 import moment from 'moment-timezone';
 
@@ -105,6 +111,18 @@ export class GhostPlus implements INodeType {
 						},
 					},
 					{
+						name: 'Media',
+						value: 'media',
+						description: 'Upload media (video/audio) to Ghost CMS',
+						displayOptions: {
+							show: {
+								source: [
+									'adminApi',
+								],
+							},
+						},
+					},
+					{
 						name: 'Post',
 						value: 'post',
 						description: 'Work with Ghost blog posts',
@@ -118,6 +136,8 @@ export class GhostPlus implements INodeType {
 			...postFields,
 			...imageOperations,
 			...imageFields,
+			...mediaOperations,
+			...mediaFields,
 		],
 	};
 
@@ -380,6 +400,21 @@ export class GhostPlus implements INodeType {
 							const responseData = await ghostApiImageUpload.call(this, binaryPropertyName, i, additionalFields);
 
 							returnData.push.apply(returnData, responseData.images);
+
+						}
+					}
+
+					if (resource === 'media') {
+						if (operation === 'upload') {
+
+							const binaryPropertyName = this.getNodeParameter('binaryPropertyName', i) as string;
+
+							const additionalFields = this.getNodeParameter('additionalFields', i) as IDataObject;
+
+							// Pass to the ghostApiMediaUpload function which has proper error handling
+							const responseData = await ghostApiMediaUpload.call(this, binaryPropertyName, i, additionalFields);
+
+							returnData.push.apply(returnData, responseData.media);
 
 						}
 					}

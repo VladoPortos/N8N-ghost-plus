@@ -29,6 +29,11 @@ This node extends the default Ghost CMS integration with additional features:
   - Support for different image purposes (general image, profile image, icon)
   - Custom file name and reference metadata
 
+- **Media Upload** (NEW in 0.1.80):
+  - Upload videos and audio files to your Ghost CMS media library
+  - Support for thumbnail uploads for videos
+  - Custom file name and reference metadata
+
 ## Requirements
 
 - N8N version 1.0.0 or later

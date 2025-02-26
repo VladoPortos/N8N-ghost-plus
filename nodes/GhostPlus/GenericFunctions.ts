@@ -131,3 +131,81 @@ export async function ghostApiImageUpload(
 		throw new NodeApiError(this.getNode(), error as JsonObject);
 	}
 }
+
+export async function ghostApiMediaUpload(
+	this: IExecuteFunctions | ILoadOptionsFunctions,
+	binaryPropertyName: string,
+	i: number,
+	additionalFormData: IDataObject = {},
+): Promise<any> { // tslint:disable-line:no-any
+	
+	const credentials = await this.getCredentials('ghostPlusAdminApi');
+	
+	// ILoadOptionsFunctions doesn't have getInputData
+	if (!(this as any).getInputData) {
+		throw new NodeApiError(this.getNode(), { message: 'Not supported for this node type' } as JsonObject);
+	}
+	
+	// This is a workaround to get the binary data
+	const items = (this as IExecuteFunctions).getInputData();
+	const item = items[i];
+	
+	if (!item.binary || !item.binary[binaryPropertyName]) {
+		throw new NodeApiError(this.getNode(), { message: `No binary data property "${binaryPropertyName}" exists!` } as JsonObject);
+	}
+	
+	const binaryProperty = item.binary[binaryPropertyName];
+	const contentType = binaryProperty.mimeType;
+	const fileName = additionalFormData.fileName as string || binaryProperty.fileName || 'media';
+	const dataBuffer = Buffer.from(binaryProperty.data, 'base64');
+	
+	// Remove fileName from additionalFormData as it's handled separately
+	if (additionalFormData.fileName !== undefined) {
+		delete additionalFormData.fileName;
+	}
+	
+	const formData: IDataObject = {
+		file: {
+			value: dataBuffer,
+			options: {
+				filename: fileName,
+				contentType,
+			},
+		},
+	};
+	
+	// Handle thumbnail if provided
+	if (additionalFormData.thumbnailBinaryProperty) {
+		const thumbnailProp = additionalFormData.thumbnailBinaryProperty as string;
+		delete additionalFormData.thumbnailBinaryProperty;
+		
+		if (item.binary && item.binary[thumbnailProp]) {
+			const thumbProperty = item.binary[thumbnailProp];
+			const thumbBuffer = Buffer.from(thumbProperty.data, 'base64');
+			
+			formData.thumbnail = {
+				value: thumbBuffer,
+				options: {
+					filename: thumbProperty.fileName || 'thumbnail.jpg',
+					contentType: thumbProperty.mimeType,
+				},
+			};
+		}
+	}
+	
+	// Add any remaining additionalFormData
+	Object.assign(formData, additionalFormData);
+	
+	const options: OptionsWithUri = {
+		method: 'POST',
+		uri: `${credentials.url}/ghost/api/v2/admin/media/upload/`,
+		formData,
+		json: true,
+	};
+	
+	try {
+		return await this.helpers.requestWithAuthentication.call(this, 'ghostPlusAdminApi', options);
+	} catch(error) {
+		throw new NodeApiError(this.getNode(), error as JsonObject);
+	}
+}
