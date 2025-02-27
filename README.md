@@ -14,10 +14,10 @@ This node extends the default Ghost CMS integration with additional features:
 
 ### Admin API (v2)
 - **Post Management**:
-  - Create: Create new blog posts
+  - Create: Create new blog posts with support for full post properties including excerpt
   - Get: Retrieve a single post by ID or slug
   - Get Many: Retrieve multiple posts with filtering options
-  - Update: Update existing blog posts
+  - Update: Update existing blog posts with all available fields including excerpt
   - Delete: Remove posts from your Ghost site
   - **Feature Image Support**:
     - `feature_image`: Set a featured image URL for your post
@@ -108,3 +108,16 @@ Select the "Image" resource and "Upload" operation to add images to your Ghost C
 ## License
 
 MIT
+
+## Changelog
+
+### 0.1.82 (2025-02-27)
+- Fixed the excerpt field implementation to use `custom_excerpt` instead of `excerpt` 
+- Ghost uses custom_excerpt as the editable field that can be set via API
+
+### 0.1.81 (2025-02-27)
+- Added support for the `excerpt` field in Create Post and Update Post operations
+- This allows setting a custom excerpt for posts instead of using the auto-generated one
+
+### 0.1.80 and earlier
+- Various features and improvements (see commit history)

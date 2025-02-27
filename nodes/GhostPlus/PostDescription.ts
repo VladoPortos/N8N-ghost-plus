@@ -226,6 +226,13 @@ export const postFields: INodeProperties[] = [
 				default: '',
 			},
 			{
+				displayName: 'Excerpt',
+				name: 'custom_excerpt',
+				type: 'string',
+				default: '',
+				description: 'Custom excerpt for the post. If not specified, Ghost will automatically generate one.',
+			},
+			{
 				displayName: 'Feature Image',
 				name: 'feature_image',
 				type: 'string',
@@ -803,6 +810,13 @@ export const postFields: INodeProperties[] = [
 					},
 				},
 				default: '',
+			},
+			{
+				displayName: 'Excerpt',
+				name: 'custom_excerpt',
+				type: 'string',
+				default: '',
+				description: 'Custom excerpt for the post. If not specified, Ghost will automatically generate one.',
 			},
 			{
 				displayName: 'Feature Image',
