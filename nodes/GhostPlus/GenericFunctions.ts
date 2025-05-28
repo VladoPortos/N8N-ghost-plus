@@ -120,7 +120,10 @@ export async function ghostApiImageUpload(
 	
 	const options: OptionsWithUri = {
 		method: 'POST',
-		uri: `${credentials.url}/ghost/api/v2/admin/images/upload/`,
+		uri: `${credentials.url}/ghost/api/admin/images/upload/`, // Removed v2 from path
+		headers: {
+			'Accept-Version': 'v5.0', // Added Accept-Version header, common for Ghost 5.x
+		},
 		formData,
 		json: true,
 	};
