@@ -1,6 +1,6 @@
 {
   "name": "@vladoportos/n8n-nodes-ghostplus",
-  "version": "0.1.83",
+  "version": "0.1.82",
   "description": "Enhanced Ghost CMS node with V2 API support for n8n",
   "license": "MIT",
   "homepage": "https://github.com/VladoPortos/N8N-ghost-plus",
@@ -55,6 +55,7 @@
   },
   "dependencies": {
     "@tryghost/admin-api": "^1.13.4",
+    "@tryghost/content-api": "^1.11.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "lodash.get": "^4.4.2",

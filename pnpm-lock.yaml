@@ -11,6 +11,9 @@ importers:
       '@tryghost/admin-api':
         specifier: ^1.13.4
         version: 1.13.12
+      '@tryghost/content-api':
+        specifier: ^1.11.0
+        version: 1.11.25
       jsonwebtoken:
         specifier: ^8.5.1
         version: 8.5.1
@@ -405,6 +408,9 @@ packages:
 
   '@tryghost/admin-api@1.13.12':
     resolution: {integrity: sha512-fZ5Mj3ucv+l4idn0ymPLGNaSl/EOyXG3kcNXwIqQRAuLFIw9dJ7fKDBnurPM8BWPFAoWoo3MHZ9UA+uQzeZlew==}
+
+  '@tryghost/content-api@1.11.25':
+    resolution: {integrity: sha512-OihtLg1jQjfbrn9Zv3htWT4PJcyfdSHYK5r8hGFZ2kaKXFbSraDOq/9BajCNfDzIw6wCEXn0Dz/PZ92J0fjGIA==}
 
   '@types/babel__core@7.20.5':
     resolution: {integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==}
@@ -3991,6 +3997,12 @@ snapshots:
       axios: 1.7.9
       form-data: 4.0.2
       jsonwebtoken: 9.0.2
+    transitivePeerDependencies:
+      - debug
+
+  '@tryghost/content-api@1.11.25':
+    dependencies:
+      axios: 1.7.9
     transitivePeerDependencies:
       - debug
 
