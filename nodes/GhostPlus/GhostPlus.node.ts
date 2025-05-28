@@ -396,10 +396,26 @@ export class GhostPlus implements INodeType {
 
 							const additionalFields = this.getNodeParameter('additionalFields', i) as IDataObject;
 
+							this.logger.debug(`[GhostPlus.node.ts] Attempting image upload for item index: ${i}. Binary property: "${binaryPropertyName}"`);
+							const currentItem = items[i];
+							if (currentItem && currentItem.binary && currentItem.binary[binaryPropertyName]) {
+								this.logger.debug(`[GhostPlus.node.ts] currentItem.binary["${binaryPropertyName}"] exists. Keys in currentItem.binary: ${Object.keys(currentItem.binary).join(', ')}`);
+							} else {
+								let reason = 'currentItem, currentItem.binary, or currentItem.binary[binaryPropertyName] is null/undefined.';
+								if (currentItem && currentItem.binary) {
+									reason = `Key "${binaryPropertyName}" not found in currentItem.binary. Existing keys: ${Object.keys(currentItem.binary).join(', ')}`;
+								} else if (currentItem) {
+									reason = 'currentItem.binary is null/undefined.';
+								} else {
+									reason = 'currentItem is null/undefined.';
+								}
+								this.logger.debug(`[GhostPlus.node.ts] currentItem.binary["${binaryPropertyName}"] DOES NOT exist or is not accessible. Reason: ${reason}`);
+							}
+
 							// Pass to the ghostApiImageUpload function which has proper error handling
 							const responseData = await ghostApiImageUpload.call(this, binaryPropertyName, i, additionalFields);
 
-							returnData.push.apply(returnData, responseData.images);
+							returnData.push({ json: responseData });
 
 						}
 					}
@@ -414,7 +430,7 @@ export class GhostPlus implements INodeType {
 							// Pass to the ghostApiMediaUpload function which has proper error handling
 							const responseData = await ghostApiMediaUpload.call(this, binaryPropertyName, i, additionalFields);
 
-							returnData.push.apply(returnData, responseData.media);
+							returnData.push({ json: responseData });
 
 						}
 					}

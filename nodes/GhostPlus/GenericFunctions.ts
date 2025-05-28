@@ -87,74 +87,144 @@ export async function ghostApiImageUpload(
 	additionalFormData: IDataObject = {},
 ): Promise<any> { // tslint:disable-line:no-any
 
+	this.logger?.debug(`[ghostApiImageUpload] Starting image upload for item index: ${i}, binary property: "${binaryPropertyName}"`);
+
 	const credentials = await this.getCredentials('ghostPlusAdminApi');
+	this.logger?.debug(`[ghostApiImageUpload] Using Ghost API URL: ${credentials.url}`);
 
 	if (!(this as IExecuteFunctions).getInputData) {
+		this.logger?.error('[ghostApiImageUpload] getInputData is not available on this context.');
 		throw new NodeApiError(this.getNode(), { message: 'getInputData is not available on this context. This function is likely called from a context that does not support it (e.g. ILoadOptionsFunctions without items).' } as JsonObject, { itemIndex: i });
 	}
 
 	const items = (this as IExecuteFunctions).getInputData();
 	if (i >= items.length || !items[i]) {
+		this.logger?.error(`[ghostApiImageUpload] No item found at index ${i}.`);
 		throw new NodeApiError(this.getNode(), { message: `No item found at index ${i}.` } as JsonObject, { itemIndex: i });
 	}
 	const item = items[i];
 
 	if (!item.binary || !item.binary[binaryPropertyName]) {
+		this.logger?.error(`[ghostApiImageUpload] No binary data found for property "${binaryPropertyName}" on item ${i}.`);
 		throw new NodeApiError(this.getNode(), { message: `No binary data found for property "${binaryPropertyName}" on item ${i}.` } as JsonObject, { itemIndex: i });
 	}
 
 	const binaryProperty = item.binary[binaryPropertyName];
-	const originalFileName = additionalFormData.fileName as string || binaryProperty.fileName || 'uploaded_image';
-	const extension = binaryProperty.mimeType ? `.${binaryProperty.mimeType.split('/')[1]}` : path.extname(originalFileName);
-	const safeFileName = `${path.basename(originalFileName, path.extname(originalFileName))}${extension}`.replace(/[^a-zA-Z0-9_.-]/g, '_');
+	this.logger?.debug(`[ghostApiImageUpload] Binary property details: fileName="${binaryProperty.fileName}", mimeType="${binaryProperty.mimeType}"`);
+	// Use the n8n helper function to get the actual data buffer
+	// This correctly handles direct base64 data or filesystem references like "filesystem-v2..."
+	this.logger?.debug(`[ghostApiImageUpload] Attempting to get binary data buffer using n8n helper for item ${i}, property "${binaryPropertyName}"`);
+	const dataBuffer = await (this as IExecuteFunctions).helpers.getBinaryDataBuffer(i, binaryPropertyName);
+	this.logger?.debug(`[ghostApiImageUpload] dataBuffer obtained via helper - length: ${dataBuffer.length}`);
+	// if (dataBuffer.length > 0 && dataBuffer.length < 200) { // Log content only for small/medium buffers to avoid flooding
+	// 	this.logger?.debug(`[ghostApiImageUpload] dataBuffer obtained via helper - first 50 bytes (hex): ${dataBuffer.slice(0, 50).toString('hex')}`);
+	// } else 
+	if (dataBuffer.length === 0) {
+		this.logger?.warn(`[ghostApiImageUpload] dataBuffer obtained via helper is EMPTY for item ${i}, property "${binaryPropertyName}"`);
+	}
 
-	const dataBuffer = Buffer.from(binaryProperty.data, 'base64');
+	// --- Improved file extension and name generation ---
+	let determinedExtension = '';
+	const providedFileName = additionalFormData.fileName as string || binaryProperty.fileName;
+	const validImageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.tiff'];
+
+	if (providedFileName) {
+		const extFromProvided = path.extname(providedFileName).toLowerCase();
+		if (validImageExtensions.includes(extFromProvided)) {
+			determinedExtension = extFromProvided;
+		}
+	}
+
+	if (!determinedExtension && binaryProperty.mimeType) {
+		const mimeTypeParts = binaryProperty.mimeType.split('/');
+		if (mimeTypeParts[0] === 'image' && mimeTypeParts[1]) {
+			let extFromMime = `.${mimeTypeParts[1].toLowerCase()}`;
+			if (extFromMime === '.jpeg') extFromMime = '.jpg'; // Normalize
+			if (validImageExtensions.includes(extFromMime)) {
+				determinedExtension = extFromMime;
+			}
+		}
+	}
+
+	if (!determinedExtension) {
+		// If still no valid extension, try to use the original extension if it exists, otherwise default.
+		if (providedFileName && path.extname(providedFileName)){
+			determinedExtension = path.extname(providedFileName).toLowerCase();
+		} else {
+			determinedExtension = '.jpg'; // Fallback to .jpg if no other info is available
+			this.logger?.debug('[ghostApiImageUpload] No valid extension found, defaulting to .jpg');
+		}
+	}
+
+	const baseName = providedFileName ? path.basename(providedFileName, path.extname(providedFileName)) : 'uploaded_image';
+	let safeFileName = `${baseName}${determinedExtension}`.replace(/[^a-zA-Z0-9_.-]/g, '_');
+	if (!path.extname(safeFileName) && determinedExtension) {
+	    safeFileName = `${path.basename(safeFileName, path.extname(safeFileName))}${determinedExtension}`;
+	} else if (!path.extname(safeFileName)){
+	    safeFileName = `${safeFileName}.jpg`;
+	}
+	this.logger?.debug(`[ghostApiImageUpload] Determined extension: "${determinedExtension}", Safe file name for temp: "${safeFileName}"`);
+	// --- End of improved file name generation ---
 
 	const api = new GhostAdminAPI({
 		url: credentials.url as string,
-		// Ensure your credential type 'ghostPlusAdminApi' has a field named 'apiKey' or adjust accordingly.
 		key: credentials.apiKey as string, 
-		version: 'v5.0', // Using a modern Ghost API version via the library
+		version: 'v5.0',
 	});
 
 	let tempFilePath: string | undefined;
 	try {
 		const tempDir = os.tmpdir();
-		tempFilePath = path.join(tempDir, `n8n_ghost_upload_${Date.now()}_${safeFileName}`);
+		tempFilePath = path.join(tempDir, safeFileName);
+		this.logger?.debug(`[ghostApiImageUpload] Creating temporary file at: "${tempFilePath}"`);
 
 		await fs.writeFile(tempFilePath, dataBuffer);
+		this.logger?.debug(`[ghostApiImageUpload] Temporary file written successfully.`);
 
-		const uploadOptions: { ref?: string } = {};
+		const apiRef = safeFileName; // Always use safeFileName (with extension) for the API call's ref
+		this.logger?.debug(`[ghostApiImageUpload] Determined API ref (from safeFileName): "${apiRef}"`);
+
+		// Log what the user provided as ref in additionalFields, if anything
 		if (additionalFormData.ref) {
-			uploadOptions.ref = additionalFormData.ref as string;
+			this.logger?.debug(`[ghostApiImageUpload] User-provided ref (additionalFields.ref): "${additionalFormData.ref as string}"`);
 		}
 
+		this.logger?.debug(`[ghostApiImageUpload] Calling api.images.upload with file: "${tempFilePath}", using apiRef: "${apiRef}"`);
 		const result = await api.images.upload({
 			file: tempFilePath,
-			...uploadOptions,
+			//ref: apiRef, // Use the safeFileName (with extension) as the ref for the API
 		});
+		this.logger?.debug('[ghostApiImageUpload] Image upload successful. API Response:', result);
 		return result;
 
 	} catch (error: any) {
 		const errorMessage = error.message || 'Unknown error during Ghost API image upload.';
-		// Attempt to get more detailed error information if available from Ghost API client error structure
-		let errorDetails = {};
+		let errorDetails: IDataObject = {};
 		if (error.errors && Array.isArray(error.errors) && error.errors.length > 0) {
-			errorDetails = { ghostErrors: error.errors.map((err: any) => ({ message: err.message, context: err.context, type: err.type })) };
+			errorDetails.ghostErrors = error.errors.map((err: any) => ({ 
+				message: err.message, 
+				context: err.context, 
+				type: err.type,
+				help: err.help,
+				code: err.code,
+				id: err.id,
+			}));
 		} else if (error.response?.data) {
-			errorDetails = { responseData: error.response.data };
+			errorDetails.responseData = error.response.data;
 		} else if (error.context) {
-			errorDetails = { context: error.context };
+			errorDetails.context = error.context;
+		} else {
+			errorDetails.rawError = error.toString();
 		}
+		this.logger?.error(`[ghostApiImageUpload] Error during image upload: ${errorMessage}`, errorDetails);
 		throw new NodeApiError(this.getNode(), { message: errorMessage, ...errorDetails } as JsonObject, { itemIndex: i });
 	} finally {
 		if (tempFilePath) {
 			try {
-				await fs.unlink(tempFilePath);
+				// await fs.unlink(tempFilePath); // Temporarily disabled for debugging
+				this.logger?.debug(`[ghostApiImageUpload] Successfully deleted temporary file: "${tempFilePath}"`);
 			} catch (cleanupError) {
-				if ((this as IExecuteFunctions).logger) {
-					(this as IExecuteFunctions).logger.error(`Failed to delete temporary file ${tempFilePath}: ${(cleanupError as Error).message}`);
-				}
+				this.logger?.error(`[ghostApiImageUpload] Failed to delete temporary file "${tempFilePath}": ${(cleanupError as Error).message}`);
 			}
 		}
 	}
@@ -166,74 +236,131 @@ export async function ghostApiMediaUpload(
 	i: number,
 	additionalFormData: IDataObject = {},
 ): Promise<any> { // tslint:disable-line:no-any
-	
 	const credentials = await this.getCredentials('ghostPlusAdminApi');
-	
-	// ILoadOptionsFunctions doesn't have getInputData
-	if (!(this as any).getInputData) {
-		throw new NodeApiError(this.getNode(), { message: 'Not supported for this node type' } as JsonObject);
+
+	if (!(this as IExecuteFunctions).getInputData) {
+		throw new NodeApiError(this.getNode(), { message: 'Media upload is not supported for this node type (requires IExecuteFunctions)' } as JsonObject, { itemIndex: i });
 	}
-	
-	// This is a workaround to get the binary data
-	const items = (this as IExecuteFunctions).getInputData();
-	const item = items[i];
-	
+
+	const item = (this as IExecuteFunctions).getInputData(i)[0]; // Assuming one item at a time for simplicity, adjust if batching
+
 	if (!item.binary || !item.binary[binaryPropertyName]) {
-		throw new NodeApiError(this.getNode(), { message: `No binary data property "${binaryPropertyName}" exists!` } as JsonObject);
+		throw new NodeApiError(this.getNode(), { message: `No binary data found for property "${binaryPropertyName}" in item ${i}.` } as JsonObject, { itemIndex: i });
 	}
-	
+
 	const binaryProperty = item.binary[binaryPropertyName];
-	const contentType = binaryProperty.mimeType;
-	const fileName = additionalFormData.fileName as string || binaryProperty.fileName || 'media';
-	const dataBuffer = Buffer.from(binaryProperty.data, 'base64');
-	
-	// Remove fileName from additionalFormData as it's handled separately
-	if (additionalFormData.fileName !== undefined) {
-		delete additionalFormData.fileName;
+	this.logger?.debug(`[ghostApiMediaUpload] Processing media for item ${i}, binary property: "${binaryPropertyName}"`);
+	this.logger?.debug(`[ghostApiMediaUpload] Binary details: fileName="${binaryProperty.fileName}", mimeType="${binaryProperty.mimeType}"`);
+
+	// Get main media data buffer
+	this.logger?.debug(`[ghostApiMediaUpload] Attempting to get main media data buffer using n8n helper for item ${i}, property "${binaryPropertyName}"`);
+	const mainDataBuffer = await (this as IExecuteFunctions).helpers.getBinaryDataBuffer(i, binaryPropertyName);
+	this.logger?.debug(`[ghostApiMediaUpload] Main media dataBuffer obtained - length: ${mainDataBuffer.length}`);
+	if (mainDataBuffer.length === 0) {
+		throw new NodeApiError(this.getNode(), { message: `Main media data buffer for "${binaryPropertyName}" is empty in item ${i}.` } as JsonObject, { itemIndex: i });
 	}
-	
-	const formData: IDataObject = {
-		file: {
-			value: dataBuffer,
-			options: {
-				filename: fileName,
-				contentType,
-			},
-		},
-	};
-	
-	// Handle thumbnail if provided
-	if (additionalFormData.thumbnailBinaryProperty) {
-		const thumbnailProp = additionalFormData.thumbnailBinaryProperty as string;
-		delete additionalFormData.thumbnailBinaryProperty;
-		
-		if (item.binary && item.binary[thumbnailProp]) {
-			const thumbProperty = item.binary[thumbnailProp];
-			const thumbBuffer = Buffer.from(thumbProperty.data, 'base64');
-			
-			formData.thumbnail = {
-				value: thumbBuffer,
-				options: {
-					filename: thumbProperty.fileName || 'thumbnail.jpg',
-					contentType: thumbProperty.mimeType,
-				},
-			};
-		}
+
+	// Determine file extension and safe file name for the main media
+	let mainFileName = additionalFormData.fileName as string || binaryProperty.fileName || 'uploaded_media';
+	let mainFileExt = path.extname(mainFileName).toLowerCase();
+	if (!mainFileExt && binaryProperty.mimeType) {
+		const mimeExt = `.${binaryProperty.mimeType.split('/')[1]}`.toLowerCase();
+		if (mimeExt) mainFileExt = mimeExt;
 	}
-	
-	// Add any remaining additionalFormData
-	Object.assign(formData, additionalFormData);
-	
-	const options: OptionsWithUri = {
-		method: 'POST',
-		uri: `${credentials.url}/ghost/api/v2/admin/media/upload/`,
-		formData,
-		json: true,
-	};
-	
+	if (!mainFileExt) mainFileExt = '.bin'; // Fallback extension
+	mainFileName = `${path.basename(mainFileName, path.extname(mainFileName))}${mainFileExt}`.replace(/[^a-zA-Z0-9_.-]/g, '_');
+
+	let tempMainFilePath: string | undefined;
+	let tempThumbnailFilePath: string | undefined;
+
+	const api = new GhostAdminAPI({
+		url: credentials.url as string,
+		key: credentials.apiKey as string,
+		version: 'v5.0',
+	});
+
 	try {
-		return await this.helpers.requestWithAuthentication.call(this, 'ghostPlusAdminApi', options);
-	} catch(error) {
-		throw new NodeApiError(this.getNode(), error as JsonObject);
+		// Create temporary file for main media
+		const tempDir = os.tmpdir();
+		tempMainFilePath = path.join(tempDir, `n8n_media_${Date.now()}_${mainFileName}`);
+		await fs.writeFile(tempMainFilePath, mainDataBuffer);
+		this.logger?.debug(`[ghostApiMediaUpload] Main media temporary file created at: "${tempMainFilePath}"`);
+
+		const uploadOptions: { file: string; ref?: string; thumbnailFile?: string; } = {
+			file: tempMainFilePath,
+		};
+
+		// Handle thumbnail if provided
+		const thumbnailBinaryPropName = additionalFormData.thumbnailBinaryProperty as string;
+		if (thumbnailBinaryPropName && item.binary && item.binary[thumbnailBinaryPropName]) {
+			const thumbnailProperty = item.binary[thumbnailBinaryPropName];
+			this.logger?.debug(`[ghostApiMediaUpload] Processing thumbnail for item ${i}, binary property: "${thumbnailBinaryPropName}"`);
+			this.logger?.debug(`[ghostApiMediaUpload] Thumbnail details: fileName="${thumbnailProperty.fileName}", mimeType="${thumbnailProperty.mimeType}"`);
+
+			const thumbnailDataBuffer = await (this as IExecuteFunctions).helpers.getBinaryDataBuffer(i, thumbnailBinaryPropName);
+			this.logger?.debug(`[ghostApiMediaUpload] Thumbnail dataBuffer obtained - length: ${thumbnailDataBuffer.length}`);
+
+			if (thumbnailDataBuffer.length > 0) {
+				let thumbFileName = thumbnailProperty.fileName || 'uploaded_thumbnail';
+				let thumbFileExt = path.extname(thumbFileName).toLowerCase();
+				if (!thumbFileExt && thumbnailProperty.mimeType) {
+					const mimeExt = `.${thumbnailProperty.mimeType.split('/')[1]}`.toLowerCase();
+					if (mimeExt) thumbFileExt = mimeExt;
+				}
+				if (!thumbFileExt) thumbFileExt = '.jpg'; // Fallback extension for thumbnails
+				thumbFileName = `${path.basename(thumbFileName, path.extname(thumbFileName))}${thumbFileExt}`.replace(/[^a-zA-Z0-9_.-]/g, '_');
+
+				tempThumbnailFilePath = path.join(tempDir, `n8n_thumb_${Date.now()}_${thumbFileName}`);
+				await fs.writeFile(tempThumbnailFilePath, thumbnailDataBuffer);
+				this.logger?.debug(`[ghostApiMediaUpload] Thumbnail temporary file created at: "${tempThumbnailFilePath}"`);
+				uploadOptions.thumbnailFile = tempThumbnailFilePath;
+			} else {
+				this.logger?.warn(`[ghostApiMediaUpload] Thumbnail data buffer for "${thumbnailBinaryPropName}" is empty in item ${i}. Skipping thumbnail.`);
+			}
+		}
+
+		// Set 'ref' for the upload, defaults to the main file name if not provided
+		uploadOptions.ref = (additionalFormData.ref as string) || mainFileName;
+		this.logger?.debug(`[ghostApiMediaUpload] Calling api.media.upload with options: ${JSON.stringify({ ...uploadOptions, file: '...', thumbnailFile: uploadOptions.thumbnailFile ? '...' : undefined })}`);
+
+		const result = await api.media.upload(uploadOptions);
+		this.logger?.debug(`[ghostApiMediaUpload] Media upload successful. API Response: ${JSON.stringify(result)}`);
+		return result;
+
+	} catch (error: any) {
+		let errorMessage = 'Unknown error during media upload';
+		const errorDetails: IDataObject = {};
+		if (error.message) {
+			errorMessage = error.message;
+		}
+		if (error.response && error.response.body && error.response.body.errors) {
+			errorDetails.ghostErrors = error.response.body.errors;
+			errorMessage = error.response.body.errors.map((e: any) => e.message).join(', ');
+		} else if (error.context) {
+			errorDetails.context = error.context;
+		} else {
+			errorDetails.rawError = error.toString();
+		}
+		this.logger?.error(`[ghostApiMediaUpload] Error during media upload: ${errorMessage}`, errorDetails);
+		throw new NodeApiError(this.getNode(), { message: errorMessage, ...errorDetails } as JsonObject, { itemIndex: i });
+	} finally {
+		// Clean up main media temporary file
+		if (tempMainFilePath) {
+			try {
+				await fs.unlink(tempMainFilePath);
+				this.logger?.debug(`[ghostApiMediaUpload] Successfully deleted main media temporary file: "${tempMainFilePath}"`);
+			} catch (cleanupError) {
+				this.logger?.error(`[ghostApiMediaUpload] Failed to delete main media temporary file "${tempMainFilePath}": ${(cleanupError as Error).message}`);
+			}
+		}
+		// Clean up thumbnail temporary file
+		if (tempThumbnailFilePath) {
+			try {
+				await fs.unlink(tempThumbnailFilePath);
+				this.logger?.debug(`[ghostApiMediaUpload] Successfully deleted thumbnail temporary file: "${tempThumbnailFilePath}"`);
+			} catch (cleanupError) {
+				this.logger?.error(`[ghostApiMediaUpload] Failed to delete thumbnail temporary file "${tempThumbnailFilePath}": ${(cleanupError as Error).message}`);
+			}
+		}
 	}
 }
